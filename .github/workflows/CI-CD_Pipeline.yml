@@ -1,0 +1,88 @@
+name: Enterprise CI/CD Pipeline
+
+# NOTE: this is a example github action an is subject to change
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  # ---------------------------------------------------------
+  # STAGE 1: TEST
+  # ---------------------------------------------------------
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Tests
+        # Runs tests without packaging the application
+        run: mvn test 
+
+  # ---------------------------------------------------------
+  # STAGE 2: BUILD
+  # ---------------------------------------------------------
+  build:
+    name: Build Application
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compile and Package WAR
+        # Packages the app but skips tests since Stage 1 already did it
+        run: mvn package -DskipTests
+
+      - name: Temporarily Store WAR File
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-war
+          path: target/*.war
+          retention-days: 1 # Only needed to pass to the deploy job
+
+  # ---------------------------------------------------------
+  # STAGE 3: DEPLOY (Create Release)
+  # ---------------------------------------------------------
+  deploy:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download WAR File from Build Stage
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-war
+          path: artifact-dir
+
+      - name: Generate Dynamic Version Tag
+        id: versioning
+        run: echo "VERSION_TAG=v$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_ENV # should be set to a more incremental version scheme
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          name: Release ${{ env.VERSION_TAG }}
+          files: artifact-dir/*.war
+          generate_release_notes: true
