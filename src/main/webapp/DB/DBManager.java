@@ -16,8 +16,8 @@ public class DBManager{
     }
 
     private DBManager() throws ClassNotFoundException, SQLException{
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:1234/placeholder",
-                                                    "placeholder", "123");
+            connection = DriverManager.getConnection("jdbc:postgresql://10.89.0.2:5432/milkyway",
+                                                    "sol", "terra");
         connection.setAutoCommit(false);
         
     }
