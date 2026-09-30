@@ -26,5 +26,6 @@
   <description>
      Welcome to Tomcat
   </description>
+  <request-character-encoding>UTF-8</request-character-encoding>
 
 </web-app>
