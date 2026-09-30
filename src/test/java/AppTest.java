@@ -1,12 +1,21 @@
 import org.junit.jupiter.api.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTest {
 
     @Test
-    public void testPipelineConnection() {
-        // Simple assertion to verify the Test stage executes successfully
-        System.out.println("Pipeline Test Stage: Running unit test...");
-        assertTrue(true, "The test suite is functioning correctly.");
+    public void testPostgresDriverAndConnection() {
+        boolean driverFound = false;
+        try {
+            Class.forName("org.postgresql.Driver");
+            driverFound = true;
+            System.out.println("✅ PostgreSQL JDBC Driver found on classpath!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ PostgreSQL JDBC Driver missing!");
+        }
+        assertTrue(driverFound, "PostgreSQL JDBC driver (org.postgresql.Driver) should be present on the classpath.");
     }
 }
