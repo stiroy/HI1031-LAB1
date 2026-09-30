@@ -1,4 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    boolean driverFound = false;
+    String driverStatusMessage = "";
+    try {
+        Class.forName("org.postgresql.Driver");
+        driverFound = true;
+        driverStatusMessage = "Loaded (org.postgresql.Driver)";
+    } catch (ClassNotFoundException e) {
+        driverStatusMessage = "NOT FOUND on Classpath";
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,6 +28,11 @@
         <p><strong>Server Time:</strong> <%= new java.util.Date() %></p>
         <p><strong>Java Runtime:</strong> <%= System.getProperty("java.version") %></p>
         <p><strong>Server Info:</strong> <%= application.getServerInfo() %></p>
+        <p><strong>Postgres Driver:</strong> 
+            <span class="<%= driverFound ? "db-ok" : "db-err" %>">
+                <%= driverStatusMessage %>
+            </span>
+        </p>
     </div>
 </body>
 </html>
