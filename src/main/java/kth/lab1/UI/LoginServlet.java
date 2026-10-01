@@ -22,19 +22,12 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // 1. Extract form values sent from login.jsp
         String usernameInput = request.getParameter("username");
         String roleInput = request.getParameter("role");
-
-        // 2. Create the Model object (no validation checks, as requested)
         User user = new User(usernameInput, roleInput);
-
-        // 3. Store the user object in the Session (persists across page reloads)
         HttpSession session = request.getSession();
         session.setAttribute("currentUser", user);
 
-        // 4. Forward internal control to the hidden profile JSP
-        request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp")
-               .forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp").forward(request, response);
     }
 }
