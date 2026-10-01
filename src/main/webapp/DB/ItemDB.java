@@ -7,7 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
-//Hanterar Items
+//DEPRICATED
+/* 
 public class ItemDB extends Item{
     public static Collection searchItems(String group) {
         Vector searchResult = new Vector<>();
@@ -31,3 +32,4 @@ public class ItemDB extends Item{
         super(id, name, description, category);
     }
 }
+*/
