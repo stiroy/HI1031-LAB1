@@ -12,6 +12,13 @@ public class ItemDTO {
         this.category = category;
         this.quantity = quantity;
     }
+    public ItemDTO(int id, String name, String description, String category){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.quantity = 1;
+    }
 
     public int getId(){return this.id;}
     public String getName(){return this.name;}

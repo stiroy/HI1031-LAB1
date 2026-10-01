@@ -10,11 +10,11 @@ import java.sql.ResultSet;
 public class ItemDAO{
 
     //Commits current transaction
-    public static void commit(Connection connection){
+    public static void commit(Connection connection) throws ItemDBException{
         try{
             connection.commit();
         }
-        catch(SQLException e){System.err.println("Failed to commit: " ); e.printStackTrace();}
+        catch(SQLException e){handleException(connection, "Failed to commit", e);}
     }
 
     //Rollbacks current transaction
@@ -94,11 +94,14 @@ public class ItemDAO{
         commit(connection);
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
-//Changes information about an items, such as its name, description, category
-    public static void changeItem(ItemDTO itemDTO)throws ItemDBException{
+//Updates information about an items, such as its name, description, category
+    public static void updateItem(ItemDTO itemDTO)throws ItemDBException{
 
     }
+//updates the quantity of a given item
+    public static void updateQuantity(ItemDTO itemDTO, int quantity)throws ItemDBException{
 
+    }
 
 
     private static void handleException(Connection connection, String failureMsg, Exception cause) throws ItemDBException {
