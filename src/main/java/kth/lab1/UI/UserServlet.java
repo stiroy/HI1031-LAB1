@@ -18,8 +18,6 @@ public class UserServlet extends HttpServlet {
         User user = new User("Jane Doe", "Administrator");
 
         request.setAttribute("user", user);
-
-        request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp")
-               .forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp").forward(request, response);
     }
 }
