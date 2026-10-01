@@ -5,13 +5,10 @@
     try {
         connectionEstablished = DBManager.getConnection().isValid(2);
         connectionStatusMessage = connectionEstablished ? "CONNECTED" : "CONNECTION INVALID";
-    } catch (ClassNotFoundException | java.sql.SQLException e) {
+    } catch (ClassNotFoundException | java.sql.SQLException | NullPointerException e) {
         connectionStatusMessage = "CONNECTION FAILED";
         application.log("Database connection check failed", e);
     }
-%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
     boolean driverFound = false;
     String driverStatusMessage = "";
     try {
@@ -22,6 +19,7 @@
         driverStatusMessage = "NOT FOUND on Classpath";
     }
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
