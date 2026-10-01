@@ -1,4 +1,5 @@
 package kth.lab1.DB;
+/* 
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
