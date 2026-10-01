@@ -35,14 +35,15 @@ public class ItemDAO{
         try {
             Connection connection = DBManager.getConnection();
             Statement st = connection.createStatement();
-            ResultSet retrieveSet = st.executeQuery("select id, name, description, category FROM T_ITEM ORDER BY T_ITEM.name DESC");
+            ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_ITEM ORDER BY T_ITEM.name DESC");
             while (retrieveSet.next()){
                 ItemDTO item = new ItemDTO(
                     retrieveSet.getInt("id"),
                     retrieveSet.getString("name"),
                     retrieveSet.getString("description"),
                     retrieveSet.getString("category"),
-                    1
+                    retrieveSet.getInt("quantity"),
+                    retrieveSet.getDouble("price")
                 );
                 retrievedItems.add(item);
             }
@@ -58,7 +59,7 @@ public class ItemDAO{
 
         try{
             Connection connection = DBManager.getConnection();
-            String searchItemQuery = "SELECT id, name, description, category FROM T_ITEM WHERE name ILIKE ?";
+            String searchItemQuery = "SELECT id, name, description, category, price FROM T_ITEM WHERE name ILIKE ?";
             PreparedStatement ps = connection.prepareStatement(searchItemQuery);
             ps.setString(1,"%"+ itemName + "%");
             ResultSet searchResultSet = ps.executeQuery();
@@ -68,7 +69,8 @@ public class ItemDAO{
                     searchResultSet.getInt("id"),
                     searchResultSet.getString("name"),
                     searchResultSet.getString("description"),
-                    searchResultSet.getString("category")
+                    searchResultSet.getString("category"),
+                    searchResultSet.getDouble("price")
                 );
                 searchItemResult.add(item);
             }
@@ -76,9 +78,33 @@ public class ItemDAO{
         }catch(SQLException | ClassNotFoundException | ItemDBException e ){e.printStackTrace();}
         return searchItemResult;
     }
-    //Insert Info about item name, description, category and quantity, item id is created upon insert by database, for employee use only
+    //Insert Info about item name, description, category and quantity, price item id is created upon insert by database, for employee use only
     public static void addItem(ItemDTO itemDTO) throws ItemDBException {
         String failureMsg = "Could not insert new item " + itemDTO.getName();
+        Connection connection = null;
+        try{   
+            if(itemDTO.getPrice()<=0 || itemDTO.getQuantity()<0 ){
+                
+            }
+        connection = DBManager.getConnection();
+        String createItemStatement = "INSERT INTO T_ITEM(name, description, category, quantity, price) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement ps = connection.prepareStatement(createItemStatement);
+            ps.setString(1, itemDTO.getName());
+            ps.setString(2, itemDTO.getDescription());
+            ps.setString(3, itemDTO.getCategory());
+            ps.setInt(4, itemDTO.getQuantity());
+            ps.setDouble(5, itemDTO.getPrice());
+
+        int updatedRows = ps.executeUpdate();
+        if(updatedRows == 0){
+            handleException(connection, failureMsg, null);
+        }
+        commit(connection);
+        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+    }
+//Updates information about an items, such as its name, description, category, price
+    public static void updateItem(ItemDTO itemDTO)throws ItemDBException{
+        String failureMsg = "Could not update item " + itemDTO.getName();
         Connection connection = null;
         try{   
         connection = DBManager.getConnection();
@@ -90,21 +116,36 @@ public class ItemDAO{
             ps.setInt(4, itemDTO.getQuantity());
 
         int updatedRows = ps.executeUpdate();
-        if(updatedRows == 0){
+        if(updatedRows != 1){
             handleException(connection, failureMsg, null);
         }
         commit(connection);
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
-//Updates information about an items, such as its name, description, category
-    public static void updateItem(ItemDTO itemDTO)throws ItemDBException{
-
-    }
 //updates the quantity of a given item
     public static void updateQuantity(ItemDTO itemDTO, int quantity)throws ItemDBException{
+        String failureMsg = "Could not update "+itemDTO.getName()+" to: " + quantity;
+        Connection connection = null;
+        try{
+        connection = DBManager.getConnection();
+        String updateQuantityStatement = "UPDATE T_ITEM SET quantity = ? WHERE name = ?";    
+         PreparedStatement ps = connection.prepareStatement(updateQuantityStatement);
+        ps.setInt(1, quantity); 
+        ps.setString(2, itemDTO.getName());
 
+        int updatedRows = ps.executeUpdate();
+            if (updatedRows != 1) {
+                handleException(connection ,failureMsg, null);
+            }
+            commit(connection);
+        } catch (SQLException | ClassNotFoundException e) {
+            handleException(connection ,failureMsg, e);
+        }
     }
 
+    public static void placeOrder(ArrayList<ItemDTO> orderedItems){
+
+    }
 
     private static void handleException(Connection connection, String failureMsg, Exception cause) throws ItemDBException {
         String completeFailureMsg = failureMsg;
