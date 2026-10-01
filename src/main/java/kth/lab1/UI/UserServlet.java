@@ -15,13 +15,10 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // 1. Fetch/Construct Model Data
         User user = new User("Jane Doe", "Administrator");
 
-        // 2. Attach Model to the Request Scope
         request.setAttribute("user", user);
 
-        // 3. Forward Request & Response to the View (JSP)
         request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp")
                .forward(request, response);
     }
