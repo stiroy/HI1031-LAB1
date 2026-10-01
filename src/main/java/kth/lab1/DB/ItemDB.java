@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import db.DBManager;
 
 //Hanterar Items
 public class ItemDB extends Item{
