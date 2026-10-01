@@ -1,5 +1,5 @@
 package kth.lab1.DB;
-public class ItemDTO {
+public class ProductDTO {
     private final int id;
     private final String name;
     private final String description;
@@ -7,7 +7,7 @@ public class ItemDTO {
     private final int quantity;
     private final double price;
 
-    public ItemDTO(int id, String name, String description, String category, int quantity, double price){
+    public ProductDTO(int id, String name, String description, String category, int quantity, double price){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -15,7 +15,7 @@ public class ItemDTO {
         this.quantity = quantity;
         this.price = price;
     }
-    public ItemDTO(int id, String name, String description, String category, double price){
+    public ProductDTO(int id, String name, String description, String category, double price){
         this.id = id;
         this.name = name;
         this.description = description;

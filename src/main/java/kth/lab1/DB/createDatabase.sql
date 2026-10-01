@@ -1,5 +1,5 @@
 -- Active: 1790872155429@@localhost@9000@postgres
-CREATE TABLE T_ITEM (
+CREATE TABLE T_products (
  id SERIAL PRIMARY KEY,
  name VARCHAR(100) NOT NULL,
  description VARCHAR(100) NOT NULL DEFAULT 'none',
@@ -9,14 +9,25 @@ CREATE TABLE T_ITEM (
 );
 
 
-CREATE TABLE customer (
-    userID PRIMARY KEY DEFAULT gen_random_uuid(),
+CREATE TABLE T_customers (
+    customerID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE app_user (
+CREATE TABLE T_customerOrders (
+ orderID INT NOT NULL,
+ customerID INT NOT NULL
+);
+
+CREATE TABLE T_order (
+ 
+ itemID INT NOT NULL,
+ quantity INT NOT NULL 
+);
+
+CREATE TABLE T_employee (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL, -- BCrypt or Argon2 id hash

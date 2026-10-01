@@ -2,14 +2,14 @@ package kth.lab1.DB;
 /**
  * Thrown when a call to the bank database fails.
  */
-public class ItemDBException extends Exception {
+public class ProductDBException extends Exception {
 
     /**
      * Create a new instance thrown because of the specified reason.
      *
      * @param reason Why the exception was thrown.
      */
-    public ItemDBException(String reason) {
+    public ProductDBException(String reason) {
         super(reason);
     }
 
@@ -19,7 +19,7 @@ public class ItemDBException extends Exception {
      * @param reason    Why the exception was thrown.
      * @param rootCause The exception that caused this exception to be thrown.
      */
-    public ItemDBException(String reason, Throwable rootCause) {
+    public ProductDBException(String reason, Throwable rootCause) {
         super(reason, rootCause);
     }
 }
