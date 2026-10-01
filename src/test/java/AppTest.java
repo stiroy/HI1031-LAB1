@@ -25,14 +25,15 @@ public class AppTest {
     }
     @Test 
     public void testPostgresConnection(){
-        Connection connection= null;
+        boolean connectionWorks = false;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://10.89.0.2:5432/milkyway",
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://10.89.0.2:5432/milkyway",
                                                     "sol", "terra");
+            connectionWorks = true;
             System.out.println("✅ Connection established with database!");
         } catch (SQLException e) {
             System.err.println("❌ Connection to database failed!");
         }
-        assertNotNull(connection, "PostgreSQL ");
+        assertTrue(connectionWorks, "PostgreSQL ");
     }
 }
