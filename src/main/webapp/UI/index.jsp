@@ -10,6 +10,18 @@
         application.log("Database connection check failed", e);
     }
 %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    boolean driverFound = false;
+    String driverStatusMessage = "";
+    try {
+        Class.forName("org.postgresql.Driver");
+        driverFound = true;
+        driverStatusMessage = "Loaded (org.postgresql.Driver)";
+    } catch (ClassNotFoundException e) {
+        driverStatusMessage = "NOT FOUND on Classpath";
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,6 +45,11 @@
         <p><strong>Database Connection:</strong>
             <span class="<%= connectionEstablished ? "db-ok" : "db-err" %>">
                 <%= connectionStatusMessage %>
+            </span>
+        </p>
+        <p><strong>Postgres Driver:</strong> 
+            <span class="<%= driverFound ? "db-ok" : "db-err" %>">
+                <%= driverStatusMessage %>
             </span>
         </p>
     </div>
