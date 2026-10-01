@@ -1,3 +1,4 @@
+package kth.lab1.DB;
 public class ItemDTO {
     private final int id;
     private final String name;

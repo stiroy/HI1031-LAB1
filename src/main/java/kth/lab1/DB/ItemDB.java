@@ -1,3 +1,4 @@
+package kth.lab1.DB;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Vector;
@@ -6,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import db.DBManager;
 
 //DEPRICATED
 /* 

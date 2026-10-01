@@ -1,3 +1,4 @@
+package kth.lab1.DB;
 /**
  * Thrown when a call to the bank database fails.
  */
