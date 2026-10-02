@@ -36,7 +36,7 @@ public class ProductRepository {
     }
 
     public Optional<DBProduct> findById(int id) {
-        var sql = "SELECT id, name, price, quantity FROM T_products WHERE product_id = ?";
+        var sql = "SELECT product_id, name, price, quantity FROM T_products WHERE product_id = ?";
 
         return db.query(sql, 
             stmt -> stmt.setInt(1, id),
