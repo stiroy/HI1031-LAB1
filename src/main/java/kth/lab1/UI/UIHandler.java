@@ -28,7 +28,7 @@ public class UIHandler extends HttpServlet {
             }
             ProductDTO productDTO = handler.getItemById(itemId);
             if (productDTO == null) {
-                productDTO = new ProductDTO(itemId, "fallback Item", "we are doomed", 0, 1);
+                productDTO = new ProductDTO(itemId, "fallback Item", "we are doomed", "test",0, 1);
             }
 
             request.setAttribute("item", productDTO);
