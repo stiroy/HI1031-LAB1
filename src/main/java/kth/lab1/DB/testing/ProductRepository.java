@@ -17,7 +17,7 @@ public class ProductRepository {
         var sql = """
             INSERT INTO T_products (name, price, quantity)
             VALUES (?, ?, ?)
-            RETURNING id, name, price, stock
+            RETURNING product_id, name, price, stock
             """;
 
         return db.query(sql, 
@@ -36,7 +36,7 @@ public class ProductRepository {
     }
 
     public Optional<DBProduct> findById(int id) {
-        var sql = "SELECT id, name, price, quantity FROM T_products WHERE id = ?";
+        var sql = "SELECT product_id, name, price, quantity FROM T_products WHERE product_id = ?";
 
         return db.query(sql, 
             stmt -> stmt.setInt(1, id),
@@ -45,7 +45,7 @@ public class ProductRepository {
     }
 
     public List<DBProduct> findAll() {
-        var sql = "SELECT id, name, price, quantity FROM T_products ORDER BY name";
+        var sql = "SELECT product_id, name, price, quantity FROM T_products ORDER BY name";
 
         return db.query(sql, null, rs -> {
             var list = new ArrayList<DBProduct>();
@@ -59,7 +59,7 @@ public class ProductRepository {
     // Helper mapper local to Product
     private DBProduct mapRow(java.sql.ResultSet rs) throws java.sql.SQLException {
         return new DBProduct(
-            rs.getInt("id"),
+            rs.getInt("product_id"),
             rs.getString("name"),
             rs.getDouble("price"),
             rs.getInt("quantity")
