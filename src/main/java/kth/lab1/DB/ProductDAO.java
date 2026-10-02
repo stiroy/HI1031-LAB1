@@ -1,6 +1,13 @@
 package kth.lab1.DB;
-import java.sql.SQLException;
+import kth.lab1.Model.Product;
+import kth.lab1.Model.ProductRepository;
+import kth.lab1.Model.exceptions.DataAccessException;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -8,11 +15,12 @@ import java.sql.ResultSet;
 
 
 
+
 //Hanterar Products 
-public class ProductDAO{
+public class ProductDAO implements ProductRepository {
 
     //Commits current transaction
-    public void commit(Connection connection) throws ProductDBException{
+    private void commit(Connection connection) throws DataAccessException{
         try{
             connection.commit();
         }
@@ -20,7 +28,7 @@ public class ProductDAO{
     }
 
     //Rollbacks current transaction
-    public void rollback(Connection connection){
+    private void rollback(Connection connection){
         try{
             connection.rollback();
         } catch (SQLException e) {
@@ -29,32 +37,34 @@ public class ProductDAO{
     }
 
     //Retrieves all products in product table, could be used to present product catalog
-    public ArrayList<ProductDTO> retrieveProducts(){
-        ArrayList<ProductDTO> retrievedProducts = new ArrayList<>();
+   
+    public List<Product> retrieveProducts(){
+        List<Product> retrievedProducts = new ArrayList<>();
         String closeMessage = "Could not close result set for all product fetch";
         try {
             Connection connection = DBManager.getConnection();
             Statement st = connection.createStatement();
             ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_products ORDER BY T_products.name DESC");
             while (retrieveSet.next()){
-                ProductDTO product = new ProductDTO(
-                    retrieveSet.getInt("product_id"),
-                    retrieveSet.getString("name"),
-                    retrieveSet.getString("description"),
-                    retrieveSet.getString("category"),
-                    retrieveSet.getInt("quantity"),
-                    retrieveSet.getDouble("price")
-                );
+            Product product = new Product(
+                retrieveSet.getInt("product_id"),
+                retrieveSet.getString("name"),
+                retrieveSet.getString("description"),
+                retrieveSet.getString("category"),
+                retrieveSet.getDouble("price"),
+                retrieveSet.getInt("quantity")
+
+            );
                 retrievedProducts.add(product);
             }
             closeResultSet(closeMessage, retrieveSet);            
-        } catch(SQLException | ClassNotFoundException | ProductDBException e ){e.printStackTrace();}
+        } catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
         return retrievedProducts;
     }
 
     //Searches Product table for product's name, supports productsearch by either customer or employee, not case sensitive
-    public ArrayList<ProductDTO> searchProducts(String productName) {
-        ArrayList<ProductDTO> searchProductResult = new ArrayList<>();
+    public List<Product> searchByName(String productName) {
+        List<Product> searchProductResult = new ArrayList<>();
         String closeMessage = "Could not close result set for search product fetch";
 
         try{
@@ -65,33 +75,61 @@ public class ProductDAO{
             ResultSet searchResultSet = ps.executeQuery();
 
             while (searchResultSet.next()){
-                ProductDTO product = new ProductDTO(
+            Product product = new Product(
+                searchResultSet.getInt("product_id"),
+                searchResultSet.getString("name"),
+                searchResultSet.getString("description"),
+                searchResultSet.getString("category"),
+                searchResultSet.getDouble("price"),
+                searchResultSet.getInt("quantity")
+            );
+                searchProductResult.add(product);
+            }
+            closeResultSet(closeMessage, searchResultSet);
+        }catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
+        return searchProductResult;
+    }
+
+    public Optional<Product> searchByID(int productID) {
+        String closeMessage = "Could not close result set for search product fetch";
+
+        try{
+            Connection connection = DBManager.getConnection();
+            String searchProductQuery = "SELECT * FROM T_products WHERE product_id = ?";
+            PreparedStatement ps = connection.prepareStatement(searchProductQuery);
+            ps.setInt(1, productID);
+            ResultSet searchResultSet = ps.executeQuery();
+            if(searchResultSet.next()){
+                Product product = new Product(
                     searchResultSet.getInt("product_id"),
                     searchResultSet.getString("name"),
                     searchResultSet.getString("description"),
                     searchResultSet.getString("category"),
-                    searchResultSet.getInt("quantity"),
-                    searchResultSet.getDouble("price")    
+                    searchResultSet.getDouble("price"),
+                    searchResultSet.getInt("quantity")
                 );
-                searchProductResult.add(product);
+            closeResultSet(closeMessage, searchResultSet);
+            return Optional.of(product);
             }
             closeResultSet(closeMessage, searchResultSet);
-        }catch(SQLException | ClassNotFoundException | ProductDBException e ){e.printStackTrace();}
-        return searchProductResult;
+            return Optional.empty();
+            
+        }catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
+        return Optional.empty();
     }
     //Insert Info about product name, description, category and quantity, price product id is created upon insert by database, for employee use only
-    public void addProduct(ProductDTO productDTO) throws ProductDBException {
-        String failureMsg = "Could not insert new product " + productDTO.getName();
+    public void addProduct(Product product) throws DataAccessException {
+        String failureMsg = "Could not insert new product " + product.name();
         Connection connection = null;
         try{   
         connection = DBManager.getConnection();
         String createProductStatement = "INSERT INTO T_products(name, description, category, quantity, price) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(createProductStatement);
-            ps.setString(1, productDTO.getName());
-            ps.setString(2, productDTO.getDescription());
-            ps.setString(3, productDTO.getCategory());
-            ps.setInt(4, productDTO.getQuantity());
-            ps.setDouble(5, productDTO.getPrice());
+            ps.setString(1, product.name());
+            ps.setString(2, product.description());
+            ps.setString(3, product.category());
+            ps.setInt(4, product.stockQuantity());
+            ps.setDouble(5, product.price());
 
         int updatedRows = ps.executeUpdate();
         if(updatedRows == 0){
@@ -101,19 +139,20 @@ public class ProductDAO{
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 //Updates information about an products, such as its name, description, category, price
-    public void updateProduct(ProductDTO productDTO)throws ProductDBException{
-        String failureMsg = "Could not update product " + productDTO.getName();
+    public void updateProduct(Product product)throws DataAccessException{
+        String failureMsg = "Could not update product " + product.name();
         Connection connection = null;
         try{   
         connection = DBManager.getConnection();
-        String createProductStatement = "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE id = ?";
+        String createProductStatement = 
+        "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
         PreparedStatement ps = connection.prepareStatement(createProductStatement);
-            ps.setString(1, productDTO.getName());
-            ps.setString(2, productDTO.getDescription());
-            ps.setString(3, productDTO.getCategory());
-            ps.setInt(4, productDTO.getQuantity());
-            ps.setDouble(5,productDTO.getPrice());
-            ps.setInt(6,productDTO.getId());
+            ps.setString(1, product.name());
+            ps.setString(2, product.description());
+            ps.setString(3, product.category());
+            ps.setInt(4, product.stockQuantity());
+            ps.setDouble(5, product.price());
+            ps.setInt(6, product.id());
 
         int updatedRows = ps.executeUpdate();
         if(updatedRows != 1){
@@ -123,15 +162,15 @@ public class ProductDAO{
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 //updates the quantity of a given product
-    public void updateQuantity(ProductDTO productDTO, int quantity)throws ProductDBException{
-        String failureMsg = "Could not update " + productDTO.getName() + " to: " + quantity;
+    public void updateQuantity(int productID, int quantity)throws DataAccessException{
+        String failureMsg = "Could not update " + productID + " to: " + quantity;
         Connection connection = null;
         try{
         connection = DBManager.getConnection();
-        String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE id = ?";    
+        String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE product_id = ?";    
          PreparedStatement ps = connection.prepareStatement(updateQuantityStatement);
         ps.setInt(1, quantity); 
-        ps.setString(2, productDTO.getName());
+        ps.setInt(2, productID);
 
         int updatedRows = ps.executeUpdate();
             if (updatedRows != 1) {
@@ -143,11 +182,11 @@ public class ProductDAO{
         }
     }
 
-    public void placeOrder(ArrayList<ProductDTO> orderedProducts){
+    public void placeOrder(List<Product> orderedProducts){
 
     }
 
-    private void handleException(Connection connection, String failureMsg, Exception cause) throws ProductDBException {
+    private void handleException(Connection connection, String failureMsg, Exception cause) throws DataAccessException {
         String completeFailureMsg = failureMsg;
         if (connection != null) {
             try {
@@ -157,14 +196,14 @@ public class ProductDAO{
                         ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
             }
         }
-        throw new ProductDBException(completeFailureMsg, cause);
+        throw new DataAccessException(completeFailureMsg, cause);
     }    
 
-    private void closeResultSet(String failureMsg, ResultSet result) throws ProductDBException {
+    private void closeResultSet(String failureMsg, ResultSet result) throws DataAccessException {
         try {
             result.close();
         } catch (Exception e) {
-            throw new ProductDBException(failureMsg + " Could not close result set.", e);
+            throw new DataAccessException(failureMsg + " Could not close result set.", e);
         }
     }    
 }

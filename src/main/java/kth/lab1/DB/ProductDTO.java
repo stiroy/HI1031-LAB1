@@ -1,4 +1,5 @@
-package kth.lab1.DB;
+//package kth.lab1.DB;
+/* 
 public class ProductDTO {
     private final int id;
     private final String name;
@@ -31,3 +32,4 @@ public class ProductDTO {
     public int getQuantity(){return this.quantity;}
     public double getPrice(){return this.price;}
 }
+*/

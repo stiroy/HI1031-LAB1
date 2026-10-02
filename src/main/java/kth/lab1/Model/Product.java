@@ -11,10 +11,10 @@ public record Product(
     
     public Product {
         //Object.requireNonNull(id);
-        if (price >= 0) {
+        if (price < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
-        if (stockQuantity >= 0) {
+        if (stockQuantity < 0) {
             throw new IllegalArgumentException("stock cannot be negative");
         }
     }

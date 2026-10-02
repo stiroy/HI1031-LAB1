@@ -1,15 +1,48 @@
 package kth.lab1.Model;
-import java.util.ArrayList;
+
 import kth.lab1.UI.ProductDTO;
-import kth.lab1.DB.ProductDAO;
 import kth.lab1.DB.testing.DBManager;
+import kth.lab1.Model.exceptions.DataAccessException;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.zip.DataFormatException;
 
 import org.postgresql.ds.PGSimpleDataSource;
 public class ProductHandler {
+    private final ProductRepository products;
+
+    public ProductHandler(ProductRepository products) {
+        this.products = products;
+    }
+
+    public List<Product> getProducts() {
+        return products.retrieveProducts();
+    }
+    
+    public List<Product> searchProduct(String productName){
+        return products.searchByName(productName);
+    }
+
+    public Optional<Product> searchProductByID(int productID){
+        return products.searchByID(productID);
+    }
+
+    public void addProduct(Product product) throws DataAccessException{
+        products.addProduct(product); 
+    }
+
+    public void updateProduct(Product product) throws DataAccessException{
+        products.updateProduct(product);
+    }
+
+    public void updateQuantity(int productID, int quantity) throws DataAccessException{
+        products.updateQuantity(productID, quantity);
+    }
+
 
     //private final var dbManager = new DBManager();
-    private final ProductDAO productDAO = new ProductDAO();
+
     /**
      * Dummy fetch method for testing UI-to-Model communication.
      * Bypasses dbmanager and returns a hardcoded DTO.
@@ -36,18 +69,5 @@ public class ProductHandler {
  
     }
 
-    public ArrayList<ProductDTO> getItemByName(String name){
-        ArrayList<ProductDTO> products = new ArrayList<>();
-        for (kth.lab1.DB.ProductDTO product : productDAO.searchProducts(name)) {
-            products.add(new ProductDTO(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getCategory(),
-                product.getPrice(),
-                product.getQuantity()
-            ));
-        }
-        return products;
-    }
+    
 }

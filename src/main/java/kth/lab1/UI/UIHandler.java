@@ -2,6 +2,7 @@ package kth.lab1.UI;
 
 import java.io.IOException;
 
+import kth.lab1.DB.ProductDAO;
 import kth.lab1.Model.ProductHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/item")
 public class UIHandler extends HttpServlet {
-    
-        private final ProductHandler handler = new ProductHandler();
+    //Patchwork solution, skapa en initiering component istället 
+        private final ProductHandler handler = new ProductHandler(new ProductDAO());
 
         @Override 
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

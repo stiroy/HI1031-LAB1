@@ -1,15 +1,15 @@
-package kth.lab1.DB;
+package kth.lab1.Model.exceptions;
 /**
- * Thrown when a call to the bank database fails.
+ * Thrown when a call to the database fails.
  */
-public class ProductDBException extends Exception {
+public class DataAccessException extends Exception {
 
     /**
      * Create a new instance thrown because of the specified reason.
      *
      * @param reason Why the exception was thrown.
      */
-    public ProductDBException(String reason) {
+    public DataAccessException(String reason) {
         super(reason);
     }
 
@@ -19,7 +19,7 @@ public class ProductDBException extends Exception {
      * @param reason    Why the exception was thrown.
      * @param rootCause The exception that caused this exception to be thrown.
      */
-    public ProductDBException(String reason, Throwable rootCause) {
+    public DataAccessException(String reason, Throwable rootCause) {
         super(reason, rootCause);
     }
 }

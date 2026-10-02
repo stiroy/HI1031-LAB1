@@ -1,5 +1,5 @@
 package kth.lab1.DB;
-
+import kth.lab1.Model.exceptions.DataAccessException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class UserDAO {
     
         //Commits current transaction
-    public static void commit(Connection connection) throws ProductDBException{
+    public static void commit(Connection connection) throws DataAccessException{
         try{
             connection.commit();
         }
@@ -30,7 +30,7 @@ public class UserDAO {
 
 
 
-    private static void handleException(Connection connection, String failureMsg, Exception cause) throws ProductDBException {
+    private static void handleException(Connection connection, String failureMsg, Exception cause) throws DataAccessException {
         String completeFailureMsg = failureMsg;
         if (connection != null) {
             try {
@@ -40,14 +40,14 @@ public class UserDAO {
                         ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
             }
         }
-        throw new ProductDBException(completeFailureMsg, cause);
+        throw new DataAccessException(completeFailureMsg, cause);
     }    
 
-    private static void closeResultSet(String failureMsg, ResultSet result) throws ProductDBException {
+    private static void closeResultSet(String failureMsg, ResultSet result) throws DataAccessException {
         try {
             result.close();
         } catch (Exception e) {
-            throw new ProductDBException(failureMsg + " Could not close result set.", e);
+            throw new DataAccessException(failureMsg + " Could not close result set.", e);
         }
     }   
 }
