@@ -47,13 +47,7 @@ public class ProductHandler {
      * Dummy fetch method for testing UI-to-Model communication.
      * Bypasses dbmanager and returns a hardcoded DTO.
      */
-    public ProductDTO getItemById(int id) {
-        // Return dummy data based on the requested ID
-        /*if (id == 101) {
-            return new ProductDTO(101, "Test Webshop Laptop", "great for web browsing", "computers", 1299.99, 1);
-        } else {
-            return new ProductDTO(id, "Generic Test Product", "product","test", 49.50, 2);
-        }*/
+    public ProductDTO getProductById(int id) {
         var dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[]{"10.89.0.2"});
         dataSource.setPortNumbers(new int[]{5432});
@@ -69,5 +63,4 @@ public class ProductHandler {
  
     }
 
-    
 }
