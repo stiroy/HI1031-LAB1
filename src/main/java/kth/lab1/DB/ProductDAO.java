@@ -38,7 +38,7 @@ public class ProductDAO{
             ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_products ORDER BY T_products.name DESC");
             while (retrieveSet.next()){
                 ProductDTO product = new ProductDTO(
-                    retrieveSet.getInt("id"),
+                    retrieveSet.getInt("product_id"),
                     retrieveSet.getString("name"),
                     retrieveSet.getString("description"),
                     retrieveSet.getString("category"),
@@ -66,7 +66,7 @@ public class ProductDAO{
 
             while (searchResultSet.next()){
                 ProductDTO product = new ProductDTO(
-                    searchResultSet.getInt("id"),
+                    searchResultSet.getInt("product_id"),
                     searchResultSet.getString("name"),
                     searchResultSet.getString("description"),
                     searchResultSet.getString("category"),

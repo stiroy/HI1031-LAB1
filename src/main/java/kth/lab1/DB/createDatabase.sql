@@ -7,7 +7,6 @@ CREATE TABLE T_products (
     quantity INT NOT NULL DEFAULT 0,
     price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-
 );
 
 CREATE TABLE T_customers (
@@ -35,11 +34,7 @@ CREATE TABLE T_orders (
         CHECK (
             order_status IN (
                 'NEW',
-                'PACKING',
                 'PACKED',
-                'SHIPPED',
-                'DELIVERED',
-                'CANCELLED'
             )
         ),
 
@@ -66,7 +61,6 @@ CREATE TABLE T_order_items (
         FOREIGN KEY (order_id)
         REFERENCES T_orders(order_id)
         ON DELETE CASCADE,
-
     CONSTRAINT fk_item_product
         FOREIGN KEY (product_id)
         REFERENCES T_products(product_id)
