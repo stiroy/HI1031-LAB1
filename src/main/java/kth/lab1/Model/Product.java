@@ -4,6 +4,7 @@ public record Product(
     int id,
     String name,
     String description,
+    String category,
     double price,
     int stockQuantity
 ) {
