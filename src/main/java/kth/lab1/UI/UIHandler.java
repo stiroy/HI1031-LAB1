@@ -36,7 +36,6 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("status", statusController::handleStatus);
         actionRegistry.put("index", homeController::handleHome);
         actionRegistry.put("login", sessionController::showLoginForm);
-        actionRegistry.put("doLogin", sessionController::handleLogin);
         actionRegistry.put("logout", sessionController::handleLogout);
         //actionRegistry.put("search", req -> handleSearch(req)); // Lambda method reference or arrow
         //actionRegistry.put("userProfile", req -> {throw new UnsupportedOperationException("Userprofile is not implemented yet!");});
