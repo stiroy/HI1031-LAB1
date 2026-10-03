@@ -1,9 +1,9 @@
 package kth.lab1.UI.controller;
 
 import kth.lab1.Model.ModelFacade;
+import kth.lab1.UI.DTO.ProductDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kth.lab1.UI.ProductDTO;
 
 public class ProductController {
 

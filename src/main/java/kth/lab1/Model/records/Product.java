@@ -1,5 +1,5 @@
-package kth.lab1.Model;
-
+package kth.lab1.Model.records;
+//A product, representative of a row in product table
 public record Product(
     int id,
     String name,

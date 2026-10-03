@@ -15,3 +15,6 @@ VALUES ('exampleUser', 'hashed_password');
 
 INSERT INTO T_user_roles(username, role_name)
 VALUES ('exampleUser', 'EMPLOYEE');
+
+  SELECT * FROM V_employee_orders;
+  SELECT * FROM T_products;

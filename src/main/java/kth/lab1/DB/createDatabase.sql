@@ -5,7 +5,7 @@ CREATE TABLE T_products (
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL DEFAULT 'none',
     category VARCHAR(100) NOT NULL,
-    quantity INT NOT NULL DEFAULT 0,
+    quantity INT NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -13,8 +13,7 @@ CREATE TABLE T_products (
 
 -- USER and roles
 CREATE TABLE T_users (
-    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(100) UNIQUE NOT NULL,
+    username VARCHAR(100) PRIMARY KEY,
     password_hash VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -48,33 +47,30 @@ CREATE TABLE T_user_roles (
 
 CREATE TABLE T_orders (
     order_id SERIAL PRIMARY KEY,
-    customer_id UUID NOT NULL,
-    order_status VARCHAR(20) NOT NULL DEFAULT 'NEW'
-        CHECK (
-            order_status IN (
-                'UNPACKED',
-                'PACKED'
-            )
-        ),
-
+    customer_username VARCHAR(100) NOT NULL,
+    order_status VARCHAR(20) NOT NULL DEFAULT 'UNPACKED'
+        CHECK (order_status IN ('UNPACKED', 'PACKED')),
     total_price DECIMAL(10,2) DEFAULT 0,
-    packed_by UUID,
+    packed_by VARCHAR(100),
     packed_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE
+        DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_order_customer
-        FOREIGN KEY (customer_id)
-        REFERENCES T_customers(customer_id),
+        FOREIGN KEY (customer_username)
+        REFERENCES T_users(username),
     CONSTRAINT fk_order_employee
         FOREIGN KEY (packed_by)
-        REFERENCES T_employees(employee_id)
+        REFERENCES T_users(username)
 );
 
 
-CREATE TABLE T_order_items (
-    order_item_id SERIAL PRIMARY KEY,
+
+
+CREATE TABLE T_order_product (
+    order_product_id SERIAL PRIMARY KEY,
     order_id INT NOT NULL,
     product_id INT NOT NULL,
-    quantity INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
     unit_price DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_item_order
         FOREIGN KEY (order_id)
@@ -85,3 +81,22 @@ CREATE TABLE T_order_items (
         REFERENCES T_products(product_id)
 );
 
+CREATE VIEW V_employee_orders AS
+SELECT
+    o.order_id,
+    o.customer_username,
+    p.name AS product_name,
+    oi.quantity,
+    oi.unit_price,
+    o.order_status,
+    o.total_price,
+    o.packed_by,
+    o.packed_at,
+    o.created_at
+FROM T_orders o
+JOIN T_order_product oi
+    ON o.order_id = oi.order_id
+JOIN T_products p
+    ON oi.product_id = p.product_id;
+
+  

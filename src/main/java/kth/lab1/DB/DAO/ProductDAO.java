@@ -1,7 +1,8 @@
-package kth.lab1.DB;
-import kth.lab1.Model.Product;
+package kth.lab1.DB.DAO;
+import kth.lab1.DB.DBManager;
 import kth.lab1.Model.exceptions.DataAccessException;
 import kth.lab1.Model.interfaces.ProductRepository;
+import kth.lab1.Model.records.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +18,11 @@ import java.sql.ResultSet;
 
 
 //Hanterar Products 
-public class ProductDAO implements ProductRepository {
-
-    //Commits current transaction
-    private void commit(Connection connection) throws DataAccessException{
-        try{
-            connection.commit();
-        }
-        catch(SQLException e){handleException(connection, "Failed to commit", e);}
-    }
-
-    //Rollbacks current transaction
-    private void rollback(Connection connection){
-        try{
-            connection.rollback();
-        } catch (SQLException e) {
-            System.out.println("Problem when rollback: " + e.getMessage());
-        }
-    }
+public class ProductDAO extends DAO implements ProductRepository {
 
     //Retrieves all products in product table, could be used to present product catalog
    
-    public List<Product> retrieveProducts(){
+    public List<Product> retrieveProducts() throws DataAccessException{
         List<Product> retrievedProducts = new ArrayList<>();
         String closeMessage = "Could not close result set for all product fetch";
         try {
@@ -57,13 +41,13 @@ public class ProductDAO implements ProductRepository {
             );
                 retrievedProducts.add(product);
             }
-            closeResultSet(closeMessage, retrieveSet);            
-        } catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
+            closeResultSet(retrieveSet, closeMessage);            
+        } catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
         return retrievedProducts;
     }
 
     //Searches Product table for product's name, supports productsearch by either customer or employee, not case sensitive
-    public List<Product> searchByName(String productName) {
+    public List<Product> searchByName(String productName) throws DataAccessException {
         List<Product> searchProductResult = new ArrayList<>();
         String closeMessage = "Could not close result set for search product fetch";
 
@@ -85,12 +69,12 @@ public class ProductDAO implements ProductRepository {
             );
                 searchProductResult.add(product);
             }
-            closeResultSet(closeMessage, searchResultSet);
-        }catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
+            closeResultSet(searchResultSet, closeMessage);
+        }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search by name query failed: ", e);}
         return searchProductResult;
     }
 
-    public Optional<Product> searchByID(int productID) {
+    public Optional<Product> searchByID(int productID) throws DataAccessException{
         String closeMessage = "Could not close result set for search product fetch";
 
         try{
@@ -108,14 +92,13 @@ public class ProductDAO implements ProductRepository {
                     searchResultSet.getDouble("price"),
                     searchResultSet.getInt("quantity")
                 );
-            closeResultSet(closeMessage, searchResultSet);
+            closeResultSet(searchResultSet, closeMessage);
             return Optional.of(product);
             }
-            closeResultSet(closeMessage, searchResultSet);
+            closeResultSet(searchResultSet, closeMessage);
             return Optional.empty();
             
-        }catch(SQLException | ClassNotFoundException | DataAccessException e ){e.printStackTrace();}
-        return Optional.empty();
+        }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search product by ID query failed: ", e);}
     }
     //Insert Info about product name, description, category and quantity, price product id is created upon insert by database, for employee use only
     public void addProduct(Product product) throws DataAccessException {
@@ -198,26 +181,4 @@ public class ProductDAO implements ProductRepository {
             handleException(connection ,failureMsg, e);
         }
     }
-
-
-    private void handleException(Connection connection, String failureMsg, Exception cause) throws DataAccessException {
-        String completeFailureMsg = failureMsg;
-        if (connection != null) {
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackExc) {
-                completeFailureMsg = completeFailureMsg +
-                        ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
-            }
-        }
-        throw new DataAccessException(completeFailureMsg, cause);
-    }    
-
-    private void closeResultSet(String failureMsg, ResultSet result) throws DataAccessException {
-        try {
-            result.close();
-        } catch (Exception e) {
-            throw new DataAccessException(failureMsg + " Could not close result set.", e);
-        }
-    }    
 }

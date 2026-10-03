@@ -1,14 +1,13 @@
 package kth.lab1.Model.handlers;
 
-import kth.lab1.Model.Product;
 import kth.lab1.Model.exceptions.DataAccessException;
 import kth.lab1.Model.interfaces.ProductRepository;
+import kth.lab1.Model.records.Product;
 
 import java.util.List;
 import java.util.Optional;
 
-import kth.lab1.UI.ProductDTO;
-import org.postgresql.ds.PGSimpleDataSource;
+
 public class ProductHandler {
     private final ProductRepository products;
 
@@ -16,15 +15,15 @@ public class ProductHandler {
         this.products = products;
     }
 
-    public List<Product> getProducts() {
+    public List<Product> getProducts() throws DataAccessException {
         return products.retrieveProducts();
     }
     
-    public List<Product> searchProduct(String productName){
+    public List<Product> searchProduct(String productName) throws DataAccessException{
         return products.searchByName(productName);
     }
 
-    public Optional<Product> searchProductByID(int productID){
+    public Optional<Product> searchProductByID(int productID) throws DataAccessException{
         return products.searchByID(productID);
     }
 
@@ -41,7 +40,9 @@ public class ProductHandler {
     }
 
     public void updateQuantity(int productID, int quantity) throws DataAccessException{
-        products.updateQuantity(productID, quantity);
+        if(quantity>0){
+            products.updateQuantity(productID, quantity);
+        }
     }
 
 }
