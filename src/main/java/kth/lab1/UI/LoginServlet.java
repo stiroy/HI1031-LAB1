@@ -23,8 +23,9 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String usernameInput = request.getParameter("username");
+        String passwordInput = request.getParameter("password");
         String roleInput = request.getParameter("role");
-        User user = new User(usernameInput, roleInput);
+        User user = new User(usernameInput, roleInput, passwordInput);
         HttpSession session = request.getSession();
         session.setAttribute("currentUser", user);
 

@@ -15,7 +15,7 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        User user = new User("Jane Doe", "Administrator");
+        User user = new User("Jane Doe", "Administrator","test");
 
         request.setAttribute("user", user);
         request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp").forward(request, response);
