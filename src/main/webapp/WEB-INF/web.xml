@@ -11,7 +11,8 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected App Area</web-resource-name>
-            <url-pattern>/dashboard/*</url-pattern>
+            <url-pattern>/app/dashboard/*</url-pattern>
+            <url-pattern>/app/status</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>customer</role-name>
