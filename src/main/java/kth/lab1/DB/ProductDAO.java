@@ -1,7 +1,7 @@
 package kth.lab1.DB;
 import kth.lab1.Model.Product;
-import kth.lab1.Model.ProductRepository;
 import kth.lab1.Model.exceptions.DataAccessException;
+import kth.lab1.Model.interfaces.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;

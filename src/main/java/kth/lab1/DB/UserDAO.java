@@ -1,7 +1,8 @@
 package kth.lab1.DB;
-import kth.lab1.Model.UserRepository;
 import kth.lab1.Model.User;
 import kth.lab1.Model.exceptions.DataAccessException;
+import kth.lab1.Model.interfaces.UserRepository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,7 +56,7 @@ public class UserDAO implements UserRepository{
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 
-    
+
 
 
 
