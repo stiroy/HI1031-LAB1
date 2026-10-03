@@ -18,16 +18,12 @@
             <role-name>customer</role-name>
         </auth-constraint>
     </security-constraint>
-<!-- 
+
     <login-config>
-        <auth-method>FORM</auth-method>
+        <auth-method>BASIC</auth-method>
         <realm-name>posrgres</realm-name>
-        <form-login-config>
-            <form-login-page>/app/login</form-login-page>
-            <form-error-page>/app/login-error</form-error-page>
-        </form-login-config>
     </login-config>
--->
+
     <security-role>
         <role-name>customer</role-name>
     </security-role>
