@@ -16,7 +16,7 @@
         </div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/do-login" method="POST" class="space-y-4">
+    <form action="${pageContext.request.contextPath}/app/dologin" method="POST" class="space-y-4">
         <div>
             <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Username</label>
             <input type="text" name="username" required required 
