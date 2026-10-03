@@ -21,6 +21,7 @@
     <!-- TODO: USER DB NEEDS CHANGE!!! -->
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
             dataSourceName="jdbc/postgres"
+            localDataSource="true"
             userTable="T_users" 
             userNameCol="username" 
             userCredCol="password_hash"
