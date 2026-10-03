@@ -7,6 +7,6 @@ import kth.lab1.Model.interfaces.OrderRepository;
 public class OrderDAO implements OrderRepository {
     
     public void placeOrder(List<Product> orderedProducts){
-
+        
     }
 }
