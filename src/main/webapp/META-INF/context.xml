@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 
-    <!-- Database Connection Pool -->
+    <!-- Database Connection Pool HakariCP -->
     <!-- Not sure if usable in program -->
-    <Resource name="jdbc/UserDB" 
+     <!-- can name be anything? -->
+    <Resource name="jdbc/postgres"
               auth="Container" 
               type="javax.sql.DataSource"
               maxTotal="10" 
@@ -12,12 +13,14 @@
               username="sol" 
               password="terra" 
               driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://10.89.0.2:5432/milkyway" />
+              url="jdbc:postgresql://10.89.0.2:5432/milkyway"
+              validationQuery="SELECT 1"
+              testOnBorrow="true"/>
 
     <!-- Tomcat DataSource Realm Setup -->
     <!-- TODO: USER DB NEEDS CHANGE!!! -->
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
-            dataSourceName="jdbc/UserDB"
+            dataSourceName="jdbc/postgres"
             userTable="T_users" 
             userNameCol="username" 
             userCredCol="password_hash"
@@ -26,7 +29,8 @@
            
         <!-- Enable Password Hashing (SSHA, SHA and MD5) -->
         <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler"
-                           algorithm="SHA-256" />
+                           algorithm="SHA-256"
+                           encoding="hex" />
     </Realm>
 
 </Context>

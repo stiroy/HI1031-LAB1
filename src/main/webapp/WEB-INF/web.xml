@@ -11,7 +11,8 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected App Area</web-resource-name>
-            <url-pattern>/dashboard/*</url-pattern>
+            <url-pattern>/app/dashboard/*</url-pattern>
+            <url-pattern>/app/status</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>customer</role-name>
@@ -26,7 +27,7 @@
             <form-error-page>/WEB-INF/views/login-error.jsp</form-error-page>
         </form-login-config>
     </login-config>
-    
+
     <security-role>
         <role-name>customer</role-name>
     </security-role>
@@ -38,4 +39,11 @@
             <secure>true</secure> <!-- Enable when using HTTPS -->
         </cookie-config>
     </session-config>
+    <!-- Make sure JNDI can see jdbc-->
+    <resource-ref>
+        <description>PostgreSQL User Database Connection</description>
+        <res-ref-name>jdbc/postgres</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 </web-app>
