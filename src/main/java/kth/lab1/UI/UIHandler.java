@@ -47,7 +47,7 @@ public class UIHandler extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-
+            
         // Extract action name from URL: e.g. "/app/itemDetail" -> "itemDetail"
         String pathInfo = request.getPathInfo();
         String actionName = (pathInfo != null && pathInfo.length() > 1) ? pathInfo.substring(1) : "index";
