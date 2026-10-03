@@ -31,15 +31,6 @@
     <security-role>
         <role-name>customer</role-name>
     </security-role>
-    <!-- 
-    <session-config>
-        <session-timeout>30</session-timeout>
-        <cookie-config>
-            <http-only>true</http-only>
-            <secure>true</secure> 
-        </cookie-config>
-    </session-config>
-    -->
     <!-- Make sure JNDI can see jdbc-->
     <resource-ref>
         <description>PostgreSQL User Database Connection</description>
