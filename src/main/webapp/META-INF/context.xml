@@ -25,7 +25,7 @@
             userTable="T_customers" 
             userNameCol="username" 
             userCredCol="password_hash"
-            userRoleTable="user_role"
+            userRoleTable="user_roles"
             roleNameCol="role_name">
            
         <!-- Enable Password Hashing (SSHA, SHA and MD5) -->
