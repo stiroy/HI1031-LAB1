@@ -1,4 +1,5 @@
 -- Active: 1790872155429@@localhost@9000@postgres
+-- PRODUCT TABLE --
 CREATE TABLE T_products (
     product_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -9,22 +10,40 @@ CREATE TABLE T_products (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE T_customers (
-    customer_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+-- USER and roles
+CREATE TABLE T_users (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE T_employees (
-    employee_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('EMPLOYEE', 'ADMIN')),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE T_roles (
+    role_name VARCHAR(20) PRIMARY KEY
+);
+
+INSERT INTO T_roles(role_name)
+VALUES
+    ('CUSTOMER'),
+    ('EMPLOYEE'),
+    ('ADMIN');
+
+CREATE TABLE T_user_roles (
+    username VARCHAR(100) NOT NULL,
+    role_name VARCHAR(20) NOT NULL,
+    PRIMARY KEY (username, role_name),
+    CONSTRAINT fk_user_roles_user
+        FOREIGN KEY (username)
+        REFERENCES T_users(username)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_user_roles_role
+        FOREIGN KEY (role_name)
+        REFERENCES T_roles(role_name)
+);
+
+
 
 
 CREATE TABLE T_orders (

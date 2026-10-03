@@ -1,12 +1,14 @@
-package kth.lab1.Model;
+package kth.lab1.Model.handlers;
 
-import kth.lab1.UI.ProductDTO;
-import kth.lab1.DB.testing.DBManager;
+import kth.lab1.Model.Product;
 import kth.lab1.Model.exceptions.DataAccessException;
+import kth.lab1.Model.interfaces.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+import kth.lab1.UI.ProductDTO;
+import kth.lab1.DB.testing.DBManager;
 import org.postgresql.ds.PGSimpleDataSource;
 public class ProductHandler {
     private final ProductRepository products;

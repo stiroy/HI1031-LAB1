@@ -140,7 +140,7 @@ public class ProductDAO implements ProductRepository {
     }
 
     public void removeProduct(int productID) throws DataAccessException{
-        String failureMsg = "Could not insert new product " + productID;
+        String failureMsg = "Could not remove product " + productID;
         Connection connection = null;
 
         try{   
@@ -199,9 +199,6 @@ public class ProductDAO implements ProductRepository {
         }
     }
 
-    public void placeOrder(List<Product> orderedProducts){
-
-    }
 
     private void handleException(Connection connection, String failureMsg, Exception cause) throws DataAccessException {
         String completeFailureMsg = failureMsg;

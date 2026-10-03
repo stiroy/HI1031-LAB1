@@ -1,8 +1,8 @@
 package kth.lab1.Model;
 
-import kth.lab1.Model.ProductHandler;
 import kth.lab1.UI.ProductDTO;
 import kth.lab1.DB.ProductDAO;
+import kth.lab1.Model.handlers.ProductHandler;
 /*
  * This is a entry point in to the Model layer
  * Hides all subsystem handlers from the UI layer

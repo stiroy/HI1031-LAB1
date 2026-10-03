@@ -18,10 +18,10 @@
     <!-- TODO: USER DB NEEDS CHANGE!!! -->
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
             dataSourceName="jdbc/UserDB"
-            userTable="T_customers" 
+            userTable="T_users" 
             userNameCol="username" 
             userCredCol="password_hash"
-            userRoleTable="user_roles"
+            userRoleTable="T_user_roles"
             roleNameCol="role_name">
            
         <!-- Enable Password Hashing (SSHA, SHA and MD5) -->

@@ -1,8 +1,10 @@
-package kth.lab1.Model;
+package kth.lab1.Model.interfaces;
 
 
 import java.util.List;
 import java.util.Optional;
+
+import kth.lab1.Model.Product;
 import kth.lab1.Model.exceptions.DataAccessException;
 
 public interface ProductRepository {
