@@ -20,7 +20,7 @@
     </security-constraint>
 
     <login-config>
-        <auth-method>BASIC</auth-method>
+        <auth-method>FORM</auth-method>
         <realm-name>posrgres</realm-name>
         <form-login-config>
             <form-login-page>/app/login</form-login-page>
