@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import kth.lab1.UI.ProductDTO;
-import kth.lab1.DB.testing.DBManager;
 import org.postgresql.ds.PGSimpleDataSource;
 public class ProductHandler {
     private final ProductRepository products;
@@ -43,29 +42,6 @@ public class ProductHandler {
 
     public void updateQuantity(int productID, int quantity) throws DataAccessException{
         products.updateQuantity(productID, quantity);
-    }
-
-
-    //private final var dbManager = new DBManager();
-
-    /**
-     * Dummy fetch method for testing UI-to-Model communication.
-     * Bypasses dbmanager and returns a hardcoded DTO.
-     */
-    public ProductDTO getProductById(int id) {
-        var dataSource = new PGSimpleDataSource();
-        dataSource.setServerNames(new String[]{"10.89.0.2"});
-        dataSource.setPortNumbers(new int[]{5432});
-        dataSource.setDatabaseName("milkyway");
-        dataSource.setUser("sol");
-        dataSource.setPassword("terra");
-
-        var db = new DBManager(dataSource);
-
-        return db.products().findById(id)
-             .map(p -> new ProductDTO(p.id(), p.name(), "nothing", "unknown", p.price(), p.quantity()))
-             .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + id));
- 
     }
 
 }
