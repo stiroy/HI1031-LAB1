@@ -5,6 +5,37 @@
          version="6.1">
 
     <welcome-file-list>
-        <welcome-file>statPanel.jsp</welcome-file>
+        <welcome-file>/WEB-INF/views/index.jsp</welcome-file>
     </welcome-file-list>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected App Area</web-resource-name>
+            <url-pattern>/dashboard/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>customer</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>UserDB</realm-name>
+        <form-login-config>
+            <form-login-page>/WEB-INF/views/login.jsp</form-login-page>
+            <form-error-page>/WEB-INF/views/login-error.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+    
+    <security-role>
+        <role-name>customer</role-name>
+    </security-role>
+
+    <session-config>
+        <session-timeout>30</session-timeout><!-- In minutes -->
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure> <!-- Enable when using HTTPS -->
+        </cookie-config>
+    </session-config>
 </web-app>
