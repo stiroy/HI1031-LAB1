@@ -46,45 +46,37 @@ public class UIHandler extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
             
-        // Extract action name from URL: e.g. "/app/itemDetail" -> "itemDetail"
         String pathInfo = request.getPathInfo();
         String actionName = (pathInfo != null && pathInfo.length() > 1) ? pathInfo.substring(1) : "index";
 
         ViewAction action = actionRegistry.get(actionName);
 
+        // If the route doesn't exist in registry (like login-error), default to view
+        if (action == null) {
+            request.getRequestDispatcher("/WEB-INF/views/" + actionName + ".jsp").forward(request, response);
+            return;
+        }
+
         try {
             String viewName = action.execute(request, response);
-        
             if (viewName != null) {
-                // Forward cleanly to WEB-INF/views/{viewName}.jsp
                 request.getRequestDispatcher("/WEB-INF/views/" + viewName + ".jsp").forward(request, response);
             }
-        
-            } catch (IllegalArgumentException e) {
-                // Handle bad user input (400 Bad Request)
-                request.setAttribute("errorMessage", e.getMessage());
-                //response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-        
-            } 
-            /*catch (ProductNotFoundException e) {
-                // Handle missing resource (404 Not Found)
-                request.setAttribute("errorMessage", e.getMessage());
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-        
-            }*/
-            catch (UnsupportedOperationException e) {
-                // Handle unfinished features gracefully during parallel dev
-                //request.setAttribute("errorMessage", e.getMessage());
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-        
-            } catch (Exception e) {
-                // Catch-all for unhandled 500 server errors
-                request.setAttribute("errorMessage", "An internal error occurred: " + e.getMessage());
-                //response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-            }
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "An internal error occurred: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+        }
     }
 }
