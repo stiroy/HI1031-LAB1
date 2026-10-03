@@ -12,12 +12,13 @@
         <web-resource-collection>
             <web-resource-name>Protected App Area</web-resource-name>
             <url-pattern>/app/dashboard/*</url-pattern>
+            <url-pattern>/app/status</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>customer</role-name>
         </auth-constraint>
     </security-constraint>
-
+<!-- 
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>posrgres</realm-name>
@@ -26,7 +27,7 @@
             <form-error-page>/app/login-error</form-error-page>
         </form-login-config>
     </login-config>
-
+-->
     <security-role>
         <role-name>customer</role-name>
     </security-role>
