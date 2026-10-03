@@ -1,6 +1,5 @@
 package kth.lab1.UI;
 
-import kth.lab1.Model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +14,7 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        User user = new User("Jane Doe", "Administrator","test");
+        UserDTO user = new UserDTO("Jane Doe", "Administrator","test");
 
         request.setAttribute("user", user);
         request.getRequestDispatcher("/WEB-INF/views/userProfile.jsp").forward(request, response);

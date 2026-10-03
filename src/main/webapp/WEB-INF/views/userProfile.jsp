@@ -7,7 +7,7 @@
 <body>
     <h2>Welcome to your Profile!</h2>
     <hr>
-    <p><strong>Logged in User:</strong> ${sessionScope.currentUser.username}</p>
-    <p><strong>Assigned Role:</strong> ${sessionScope.currentUser.role}</p>
+    <p><strong>Logged in User:</strong> ${sessionScope.currentUser.username()}</p>
+    <p><strong>Assigned Role:</strong> ${sessionScope.currentUser.role()}</p>
 </body>
 </html>

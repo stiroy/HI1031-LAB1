@@ -1,12 +1,12 @@
 package kth.lab1.UI;
 
-import kth.lab1.Model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 
 @WebServlet("/login")
@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
         String usernameInput = request.getParameter("username");
         String passwordInput = request.getParameter("password");
         String roleInput = request.getParameter("role");
-        User user = new User(usernameInput, roleInput, passwordInput);
+        UserDTO user = new UserDTO(usernameInput, roleInput, passwordInput);
         HttpSession session = request.getSession();
         session.setAttribute("currentUser", user);
 
