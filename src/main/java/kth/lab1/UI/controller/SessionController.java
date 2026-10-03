@@ -20,25 +20,29 @@ public class SessionController {
         return "login";
     }
 
-    public String doLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public String doLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String user = request.getParameter("username");
         String pass = request.getParameter("password");
         
         try {
+            // Programmatically authenticate with Tomcat's Realm
             request.login(user, pass);
-            response.sendRedirect(request.getContextPath() + "/protected/home");
-            return "dologin";
+            
+            // Redirect to home/dashboard on success
+            response.sendRedirect(request.getContextPath() + "/app/index");
+            return null; // Return null so UIHandler DOES NOT forward to a JSP
         
         } catch (ServletException e) {
+            // Redirect back to login with error parameter
             response.sendRedirect(request.getContextPath() + "/app/login?error=invalid_credentials");
-            return "redircect:/app/login-error";
+            return null; // Return null so UIHandler DOES NOT forward to a JSP
         }
     }
 
     /**
      * Destroys the user session and logs out.
      */
-    public String handleLogout(HttpServletRequest req, HttpServletResponse resp) {
+    public String handleLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             req.logout(); // Clears Tomcat security principal
         } catch (Exception ignored) {}
@@ -47,6 +51,8 @@ public class SessionController {
         if (session != null) {
             session.invalidate();
         }
-        return "redirect:/app/index";
+
+        resp.sendRedirect(req.getContextPath() + "/app/index");
+        return null;
     }
 }

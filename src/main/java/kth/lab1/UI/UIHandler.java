@@ -64,7 +64,7 @@ public class UIHandler extends HttpServlet {
 
         ViewAction action = actionRegistry.get(actionName);
 
-        // If the route doesn't exist in registry (like login-error), default to view
+        // If route doesn't exist in registry, attempt direct JSP forward
         if (action == null) {
             request.getRequestDispatcher("/WEB-INF/views/" + actionName + ".jsp").forward(request, response);
             return;
@@ -72,9 +72,22 @@ public class UIHandler extends HttpServlet {
 
         try {
             String viewName = action.execute(request, response);
-            if (viewName != null) {
-                request.getRequestDispatcher("/WEB-INF/views/" + viewName + ".jsp").forward(request, response);
+        
+            // Skip forwarding if controller already issued a response.sendRedirect()
+            if (viewName == null || response.isCommitted()) {
+                return;
             }
+
+            // Handle string-based redirects like "redirect:/app/index"
+            if (viewName.startsWith("redirect:")) {
+                String redirectTarget = viewName.substring("redirect:".length());
+                response.sendRedirect(request.getContextPath() + redirectTarget);
+                return;
+            }
+
+            // Standard view rendering
+            request.getRequestDispatcher("/WEB-INF/views/" + viewName + ".jsp").forward(request, response);
+
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An internal error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
