@@ -22,6 +22,10 @@
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>posrgres</realm-name>
+        <form-login-config>
+            <form-login-page>/app/login</form-login-page>
+            <form-error-page>/app/login-error</form-error-page>
+        </form-login-config>
     </login-config>
 
     <security-role>
