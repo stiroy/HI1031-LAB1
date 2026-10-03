@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import kth.lab1.UI.controller.ProductController;
 import kth.lab1.UI.controller.StatusController;
 import kth.lab1.UI.controller.HomeController;
+import kth.lab1.UI.controller.SessionController;
 
 @WebServlet("/app/*")
 public class UIHandler extends HttpServlet {
@@ -24,6 +25,7 @@ public class UIHandler extends HttpServlet {
         private final ProductController productController = new ProductController();
         private final StatusController statusController = new StatusController();
         private final HomeController homeController = new HomeController();
+        private final SessionController sessionController = new SessionController();
 
         @Override
         public void init() throws ServletException {
@@ -35,6 +37,9 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("itemDetail", productController::handleDetail);
         actionRegistry.put("status", statusController::handleStatus);
         actionRegistry.put("index", homeController::handleHome);
+        actionRegistry.put("login", sessionController::showLoginForm);
+        actionRegistry.put("doLogin", sessionController::handleLogin);
+        actionRegistry.put("logout", sessionController::handleLogout);
         //actionRegistry.put("search", req -> handleSearch(req)); // Lambda method reference or arrow
         //actionRegistry.put("userProfile", req -> {throw new UnsupportedOperationException("Userprofile is not implemented yet!");});
         //actionRegistry.put("addReview", req -> {throw new UnsupportedOperationException("handleAddReview is not implemented yet!");});
