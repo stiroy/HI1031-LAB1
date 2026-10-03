@@ -25,15 +25,11 @@ public class SessionController {
         String pass = request.getParameter("password");
         
         try {
-            // Programmatically authenticate with Tomcat's Realm
             request.login(user, pass);
-            
-            // Redirect to home/dashboard on success
             response.sendRedirect(request.getContextPath() + "/app/index");
             return null; // Return null so UIHandler DOES NOT forward to a JSP
         
         } catch (ServletException e) {
-            // Redirect back to login with error parameter
             response.sendRedirect(request.getContextPath() + "/app/login?error=invalid_credentials");
             return null; // Return null so UIHandler DOES NOT forward to a JSP
         }
