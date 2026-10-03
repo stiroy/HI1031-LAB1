@@ -23,7 +23,7 @@ public class ProductController {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
 
-        ProductDTO product = Handler.getProductById(itemId);
+        ProductDTO product = Handler.getProductByID(itemId);
 
         req.setAttribute("product", product);
         return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp

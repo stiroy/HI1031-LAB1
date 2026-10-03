@@ -10,7 +10,8 @@ import kth.lab1.Model.handlers.ProductHandler;
 public class ModelFacade {
     private final ProductHandler productHandler = new ProductHandler(new ProductDAO());
 
-    public ProductDTO getProductById(int id) {
-        return productHandler.getProductById(id);
+    public ProductDTO getProductByID(int id) {
+        return productHandler.searchProductByID(id).map(p -> new ProductDTO(p.id(), p.name(), "nothing", "unknown", p.price(), p.stockQuantity()))
+             .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + id));
     }
 }
