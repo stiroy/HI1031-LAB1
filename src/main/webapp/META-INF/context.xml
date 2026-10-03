@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 
-    <!-- Database Connection Pool -->
+    <!-- Database Connection Pool HakariCP -->
     <!-- Not sure if usable in program -->
-    <Resource name="jdbc/UserDB" 
+     <!-- can name be anything? -->
+    <Resource name="jdbc/postgres"
               auth="Container" 
               type="javax.sql.DataSource"
               maxTotal="10" 
@@ -17,7 +18,7 @@
     <!-- Tomcat DataSource Realm Setup -->
     <!-- TODO: USER DB NEEDS CHANGE!!! -->
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
-            dataSourceName="jdbc/UserDB"
+            dataSourceName="jdbc/postgres"
             userTable="T_customers" 
             userNameCol="username" 
             userCredCol="password_hash"
