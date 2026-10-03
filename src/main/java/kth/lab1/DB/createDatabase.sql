@@ -16,6 +16,12 @@ CREATE TABLE T_customers (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- rethink DB JDNI needs roles
+CREATE TABLE user_roles (
+    username VARCHAR(50) REFERENCES T_customers(username),
+    role_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (username, role_name)
+);
 
 CREATE TABLE T_employees (
     employee_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
