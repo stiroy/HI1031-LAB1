@@ -138,6 +138,23 @@ public class ProductDAO implements ProductRepository {
         commit(connection);
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
+
+    public void removeProduct(int productID) throws DataAccessException{
+        String failureMsg = "Could not insert new product " + productID;
+        Connection connection = null;
+
+        try{   
+        connection = DBManager.getConnection();
+        String removeProductStatement = "DELETE FROM T_products WHERE product_id = ?";
+        PreparedStatement ps = connection.prepareStatement(removeProductStatement);
+            ps.setInt(1, productID);
+        int updatedRows = ps.executeUpdate();
+        if(updatedRows == 0){
+            handleException(connection, failureMsg, null);
+        }
+        commit(connection);
+        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+    }
 //Updates information about an products, such as its name, description, category, price
     public void updateProduct(Product product)throws DataAccessException{
         String failureMsg = "Could not update product " + product.name();

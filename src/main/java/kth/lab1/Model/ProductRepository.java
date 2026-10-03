@@ -11,6 +11,7 @@ public interface ProductRepository {
     List<Product> retrieveProducts();
     Optional<Product> searchByID(int productID);
     void addProduct(Product product) throws DataAccessException;
+    void removeProduct(int productID) throws DataAccessException;
     void updateProduct(Product product) throws DataAccessException;
     void updateQuantity(int productID, int quantity) throws DataAccessException;
 }

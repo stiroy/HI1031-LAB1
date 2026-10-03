@@ -33,8 +33,8 @@ CREATE TABLE T_orders (
     order_status VARCHAR(20) NOT NULL DEFAULT 'NEW'
         CHECK (
             order_status IN (
-                'NEW',
-                'PACKED',
+                'UNPACKED',
+                'PACKED'
             )
         ),
 
