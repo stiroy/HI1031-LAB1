@@ -14,7 +14,7 @@
                 Welcome, <strong class="text-teal-400 font-semibold">${sessionScope.user.username}</strong>. Browse our collection, manage items, or check system metrics.
             </p>
             <div class="pt-2 flex flex-wrap gap-4">
-                <a href="${pageContext.request.contextPath}/app/itemDetail?id=101" 
+                <a href="${pageContext.request.contextPath}/app/catalog" 
                    class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold text-sm px-6 py-3 rounded-lg shadow-md transition duration-150">
                     Browse Products
                 </a>
@@ -34,7 +34,7 @@
             iconBg="bg-teal-50 text-teal-600"
             title="Product Catalog"
             description="Search through stored inventory, view detailed product information, and manage items."
-            linkHref="${pageContext.request.contextPath}/app/itemDetail?id=101"
+            linkHref="${pageContext.request.contextPath}/app/catalog"
             linkLabel="View products"
             linkColor="text-teal-600 hover:text-teal-700" />
 

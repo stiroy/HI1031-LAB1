@@ -35,6 +35,7 @@ public class UIHandler extends HttpServlet {
         private void attachActions() {
         // --- Product & Catalog Actions ---
         actionRegistry.put("itemDetail", productController::handleDetail);
+        actionRegistry.put("catalog", productController::handleCatalog);
         actionRegistry.put("status", statusController::handleStatus);
         actionRegistry.put("index", homeController::handleHome);
         actionRegistry.put("logout", sessionController::handleLogout);

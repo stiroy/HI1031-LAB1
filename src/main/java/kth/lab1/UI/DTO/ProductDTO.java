@@ -8,4 +8,11 @@ public record ProductDTO(
     String category,
     double price,
     int quantity
-    ) {}
+    ) {
+        // Standard JavaBean getters for JSP EL resolution
+        public String getName() { return name; }
+        public String getDescription() { return description; }
+        public String getCategory() { return category; }
+        public double getPrice() { return price; }
+        public int getQuantity() { return quantity; }
+    }

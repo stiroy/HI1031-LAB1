@@ -9,6 +9,7 @@ import kth.lab1.Model.exceptions.DataAccessException;
 import kth.lab1.Model.handlers.OrderHandler;
 import kth.lab1.Model.handlers.ProductHandler;
 import kth.lab1.Model.handlers.UserHandler;
+
 import kth.lab1.Model.records.CustomerOrder;
 import kth.lab1.Model.records.OrderProduct;
 import kth.lab1.Model.records.Product;
@@ -94,6 +95,19 @@ public class ModelFacade {
             );
         } catch (DataAccessException e) {
             throw new DataAccessException("Failed to get product with id: " + id, e);
+        }
+    }
+
+    // Get Products
+    public List<ProductDTO> getProducts() throws DataAccessException {
+        try {
+            List<Product> productsList = productHandler.getProducts();
+            return productsList.stream()
+                    .map(p -> new ProductDTO(p.id(), p.name(), p.description(), 
+                                            p.category(), p.price(), p.stockQuantity()))
+                    .toList();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Failed to retrieve products", e);
         }
     }
 
