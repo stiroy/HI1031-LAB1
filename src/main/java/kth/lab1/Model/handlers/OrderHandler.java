@@ -1,6 +1,7 @@
 package kth.lab1.Model.handlers;
 
 import kth.lab1.Model.exceptions.DataAccessException;
+import kth.lab1.Model.exceptions.NotFoundException;
 import kth.lab1.Model.interfaces.OrderRepository;
 import kth.lab1.Model.records.CustomerOrder;
 import kth.lab1.Model.records.OrderProduct;
@@ -29,10 +30,9 @@ public class OrderHandler {
                 throw new IllegalArgumentException("Quantity must be positive");
             }
             if (orderedProduct.quantity() > product.stockQuantity()) {
-                throw new IllegalArgumentException("Not enough stock for " + product.name());
+                throw new IllegalArgumentException("Not enough stock in inventory for " + product.name());
             }
         }
-
         orders.placeOrder(customerUsername, orderedProducts);
     }
 
@@ -43,18 +43,27 @@ public class OrderHandler {
         if(orderID <= 0){
             throw new IllegalArgumentException("Invalid order id");
         }
-
         orders.packOrder(employeeUsername, orderID);
     }
 
     public List<CustomerOrder>viewAllOrders() throws DataAccessException{
-        return orders.viewOrders(null);
+
+        List<CustomerOrder> foundOrders = orders.viewOrders(null);
+        if(foundOrders.isEmpty()){
+            throw new NotFoundException("No orders found in database");
+        }
+        return foundOrders;
     }
 
-    public List<CustomerOrder>viewCustomerOrders(String customerUsername) throws DataAccessException{
-        if (!customerUsername.isEmpty()) {
-            return orders.viewOrders(customerUsername);
+    public List<CustomerOrder> viewCustomerOrders(String customerUsername) throws DataAccessException {
+        if (customerUsername == null || customerUsername.isBlank()) {
+            return viewAllOrders();
         }
-        return orders.viewOrders(null);
+        List<CustomerOrder> foundOrders = orders.viewOrders(customerUsername);
+
+        if (foundOrders.isEmpty()) {
+            throw new NotFoundException("No orders found for customer: "+ customerUsername);
+        }
+        return foundOrders;
     }
 }

@@ -22,12 +22,9 @@ public class ProductController {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
-       try {
             ProductDTO product = Handler.getProductByID(itemId);
             req.setAttribute("product", product);
-       } catch (Exception e) {
-        // TODO: handle exception
-       } 
+
        return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
     }
 
@@ -37,7 +34,7 @@ public class ProductController {
             throw new IllegalArgumentException("Search query 'q' cannot be empty.");
         }
         
-        //req.setAttribute("searchResults", productHandler.searchProducts(query));
+        req.setAttribute("searchResults", Handler.getProductByName(query));
         return "searchResults";
     }
 }

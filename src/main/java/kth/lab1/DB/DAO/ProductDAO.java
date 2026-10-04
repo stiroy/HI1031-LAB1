@@ -20,6 +20,18 @@ import java.sql.ResultSet;
 //Hanterar Products 
 public class ProductDAO extends DAO implements ProductRepository {
 
+private Product mapProduct(ResultSet rs)throws SQLException {
+
+    return new Product(
+        rs.getInt("product_id"),
+        rs.getString("name"),
+        rs.getString("description"),
+        rs.getString("category"),
+        rs.getDouble("price"),
+        rs.getInt("quantity")
+    );
+}
+
     //Retrieves all products in product table, could be used to present product catalog
    
     public List<Product> retrieveProducts() throws DataAccessException{
@@ -28,20 +40,13 @@ public class ProductDAO extends DAO implements ProductRepository {
         try {
             Connection connection = DBManager.getConnection();
             Statement st = connection.createStatement();
-            ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_products ORDER BY T_products.name DESC");
+            ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_products ORDER BY T_products.name ASC");
             while (retrieveSet.next()){
-            Product product = new Product(
-                retrieveSet.getInt("product_id"),
-                retrieveSet.getString("name"),
-                retrieveSet.getString("description"),
-                retrieveSet.getString("category"),
-                retrieveSet.getDouble("price"),
-                retrieveSet.getInt("quantity")
-
-            );
-                retrievedProducts.add(product);
+                retrievedProducts.add(mapProduct(retrieveSet));
             }
-            closeResultSet(retrieveSet, closeMessage);            
+            closeResultSet(retrieveSet, closeMessage);   
+            st.close();
+            connection.close();         
         } catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
         return retrievedProducts;
     }
@@ -59,17 +64,11 @@ public class ProductDAO extends DAO implements ProductRepository {
             ResultSet searchResultSet = ps.executeQuery();
 
             while (searchResultSet.next()){
-            Product product = new Product(
-                searchResultSet.getInt("product_id"),
-                searchResultSet.getString("name"),
-                searchResultSet.getString("description"),
-                searchResultSet.getString("category"),
-                searchResultSet.getDouble("price"),
-                searchResultSet.getInt("quantity")
-            );
-                searchProductResult.add(product);
+                searchProductResult.add(mapProduct(searchResultSet));
             }
             closeResultSet(searchResultSet, closeMessage);
+            ps.close();
+            connection.close();
         }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search by name query failed: ", e);}
         return searchProductResult;
     }
@@ -84,20 +83,16 @@ public class ProductDAO extends DAO implements ProductRepository {
             ps.setInt(1, productID);
             ResultSet searchResultSet = ps.executeQuery();
             if(searchResultSet.next()){
-                Product product = new Product(
-                    searchResultSet.getInt("product_id"),
-                    searchResultSet.getString("name"),
-                    searchResultSet.getString("description"),
-                    searchResultSet.getString("category"),
-                    searchResultSet.getDouble("price"),
-                    searchResultSet.getInt("quantity")
-                );
+                Product product = mapProduct(searchResultSet);
             closeResultSet(searchResultSet, closeMessage);
+            ps.close();
+            connection.close();
             return Optional.of(product);
             }
-            closeResultSet(searchResultSet, closeMessage);
-            return Optional.empty();
-            
+        closeResultSet(searchResultSet, closeMessage);
+        ps.close();
+        connection.close();
+        return Optional.empty();
         }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search product by ID query failed: ", e);}
     }
     //Insert Info about product name, description, category and quantity, price product id is created upon insert by database, for employee use only
@@ -119,6 +114,8 @@ public class ProductDAO extends DAO implements ProductRepository {
             handleException(connection, failureMsg, null);
         }
         commit(connection);
+        ps.close();
+        connection.close();
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 
@@ -136,6 +133,8 @@ public class ProductDAO extends DAO implements ProductRepository {
             handleException(connection, failureMsg, null);
         }
         commit(connection);
+        ps.close();
+        connection.close();
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 //Updates information about an products, such as its name, description, category, price
@@ -143,10 +142,11 @@ public class ProductDAO extends DAO implements ProductRepository {
         String failureMsg = "Could not update product " + product.name();
         Connection connection = null;
         try{   
-        connection = DBManager.getConnection();
-        String createProductStatement = 
-        "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
-        PreparedStatement ps = connection.prepareStatement(createProductStatement);
+            connection = DBManager.getConnection();
+            String createProductStatement = 
+            "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
+            PreparedStatement ps = connection.prepareStatement(createProductStatement);
+
             ps.setString(1, product.name());
             ps.setString(2, product.description());
             ps.setString(3, product.category());
@@ -154,11 +154,13 @@ public class ProductDAO extends DAO implements ProductRepository {
             ps.setDouble(5, product.price());
             ps.setInt(6, product.id());
 
-        int updatedRows = ps.executeUpdate();
-        if(updatedRows != 1){
-            handleException(connection, failureMsg, null);
-        }
+            int updatedRows = ps.executeUpdate();
+            if(updatedRows != 1){
+                handleException(connection, failureMsg, null);
+            }
         commit(connection);
+        ps.close();
+        connection.close();
         }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
     }
 //updates the quantity of a given product
@@ -166,19 +168,20 @@ public class ProductDAO extends DAO implements ProductRepository {
         String failureMsg = "Could not update " + productID + " to: " + quantity;
         Connection connection = null;
         try{
-        connection = DBManager.getConnection();
-        String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE product_id = ?";    
-         PreparedStatement ps = connection.prepareStatement(updateQuantityStatement);
-        ps.setInt(1, quantity); 
-        ps.setInt(2, productID);
+            connection = DBManager.getConnection();
+            String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE product_id = ?";    
+            PreparedStatement ps = connection.prepareStatement(updateQuantityStatement);
+            ps.setInt(1, quantity); 
+            ps.setInt(2, productID);
 
-        int updatedRows = ps.executeUpdate();
+            int updatedRows = ps.executeUpdate();
             if (updatedRows != 1) {
                 handleException(connection ,failureMsg, null);
             }
-            commit(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            handleException(connection ,failureMsg, e);
+        commit(connection);
+        ps.close();
+        connection.close();
+        } catch (SQLException | ClassNotFoundException e) {handleException(connection ,failureMsg, e);
         }
     }
 }

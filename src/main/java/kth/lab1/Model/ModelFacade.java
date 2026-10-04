@@ -4,6 +4,7 @@ import java.util.List;
 import kth.lab1.DB.DAO.OrderDAO;
 import kth.lab1.DB.DAO.ProductDAO;
 import kth.lab1.DB.DAO.UserDAO;
+
 import kth.lab1.Model.exceptions.DataAccessException;
 import kth.lab1.Model.handlers.OrderHandler;
 import kth.lab1.Model.handlers.ProductHandler;
@@ -12,6 +13,7 @@ import kth.lab1.Model.records.CustomerOrder;
 import kth.lab1.Model.records.OrderProduct;
 import kth.lab1.Model.records.Product;
 import kth.lab1.Model.records.User;
+
 import kth.lab1.UI.DTO.CustomerOrderDTO;
 import kth.lab1.UI.DTO.OrderProductDTO;
 import kth.lab1.UI.DTO.ProductDTO;
@@ -83,12 +85,16 @@ public class ModelFacade {
 
     //Enables search by id 
     // REPLACE PLACEHOLDER INFORMATION
-    public ProductDTO getProductByID(int id) throws DataAccessException{
-        try{
-        return productHandler.searchProductByID(id).map(p -> new ProductDTO(p.id(), p.name(),
-         "nothing", "unknown", p.price(), p.stockQuantity()))
-             .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + id));
-        }catch(DataAccessException e){ throw new DataAccessException("Failed to get product with id: "+id,e); }
+    public ProductDTO getProductByID(int id) throws DataAccessException {
+        try {
+            Product product = productHandler.searchProductByID(id);
+            return new ProductDTO(
+                product.id(), product.name(), product.description(),
+                product.category(), product.price(), product.stockQuantity()
+            );
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Failed to get product with id: " + id, e);
+        }
     }
 
     //Adds product to database

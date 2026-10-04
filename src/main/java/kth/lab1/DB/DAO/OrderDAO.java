@@ -27,49 +27,55 @@ public class OrderDAO extends DAO implements OrderRepository {
         try{   
             connection = DBManager.getConnection();
             String insertStatment = "INSERT INTO T_orders (customer_username) VALUES (?) RETURNING order_id";
-            PreparedStatement ps =connection.prepareStatement(insertStatment);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            
+            PreparedStatement insertOrderStatement = connection.prepareStatement(insertStatment);
+            insertOrderStatement.setString(1, username);
+            ResultSet rs = insertOrderStatement.executeQuery();
+            if(!rs.next()){
+                handleException(connection, "Failed to create order", null);
+            }
             int orderId = rs.getInt("order_id");
+            closeResultSet(rs, closeMessage);
+
+
             String orderSQL = "INSERT INTO T_order_product (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
+            String stockSQL = "UPDATE T_products SET quantity = quantity - ? WHERE product_id = ? AND quantity >= ?";
             double totalPrice = 0;
             PreparedStatement orderStatement = connection.prepareStatement(orderSQL);
-
+            PreparedStatement stockStmt =connection.prepareStatement(stockSQL);
             for (OrderProduct p : orderedProducts) {
                 if (p.quantity() <= 0){
                     throw new IllegalArgumentException("Quantity must be greater than zero");
                 }
                 Product product = p.product();
+                stockStmt.setInt(1, p.quantity());
+                stockStmt.setInt(2, product.id());
+                stockStmt.setInt(3, p.quantity());
+                int stockRows = stockStmt.executeUpdate();
+                if (stockRows != 1) {
+                    handleException(connection, "Insufficient stock for product " + product.id(), null);
+                }
+
                 orderStatement.setInt(1, orderId);
                 orderStatement.setInt(2, product.id());
                 orderStatement.setInt(3, p.quantity());
                 orderStatement.setDouble(4, product.price());
                 orderStatement.executeUpdate();
                 totalPrice += product.price() * p.quantity();
-
-                PreparedStatement stockStmt =connection.prepareStatement("UPDATE T_products SET quantity = quantity - ? WHERE product_id = ? AND quantity >= ?");
-                stockStmt.setInt(1, p.quantity());
-                stockStmt.setInt(2, product.id());
-                stockStmt.setInt(3, p.quantity());
-                int stockRows = stockStmt.executeUpdate();
-                if (stockRows != 1) {
-                handleException(connection, "Insufficient stock for product " + product.id(), null);
             }
 
             PreparedStatement totalStmt =
             connection.prepareStatement("UPDATE T_orders SET total_price = ? WHERE order_id = ?");
             totalStmt.setDouble(1, totalPrice);
             totalStmt.setInt(2, orderId);
-
             int updatedRows = totalStmt.executeUpdate();
-            closeResultSet(rs, closeMessage);
             if(updatedRows == 0 ){
                 handleException(connection, failureMsg, null);
             }
-            commit(connection);
-            }
+        commit(connection);
+        stockStmt.close();
+        orderStatement.close();
+        totalStmt.close();
+        connection.close();
         }catch(SQLException | ClassNotFoundException | IllegalArgumentException e){handleException(connection, failureMsg, e);}  
     }
 
@@ -87,14 +93,10 @@ public class OrderDAO extends DAO implements OrderRepository {
                handleException(connection, "Order " + orderID + " could not be packed.", null);
             }
             commit(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ignored) {}
-            }
-            throw new DataAccessException("Failed to pack order: ", e);
-        }
+            ps.close();
+            connection.close();
+        } catch (SQLException | ClassNotFoundException e) {handleException(connection, "Failed to pack order: ", e);}
+  
     }
 
     public List<CustomerOrder> viewOrders(String customerName) throws DataAccessException{
@@ -126,7 +128,9 @@ public class OrderDAO extends DAO implements OrderRepository {
             );
                 retrievedOrders.add(OrderTableRow);
             }
-            closeResultSet(retrieveSet, closeMessage);            
+            closeResultSet(retrieveSet, closeMessage);   
+            ps.close();
+            connection.close();    
         } catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Fetch orders query failed: ", e);}
         return retrievedOrders;
     }
