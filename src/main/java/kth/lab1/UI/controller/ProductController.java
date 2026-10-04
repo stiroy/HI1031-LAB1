@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors; // ONLY TEMPORARY
 
 public class ProductController {
 
@@ -45,6 +46,19 @@ public class ProductController {
         //List<ProductDTO> products = Handler.getProducts();
         List<ProductDTO> products = getSampleProducts();  
         
+        // Programmatic search filtering (fallback until DB is operational)
+        String searchQuery = request.getParameter("query");
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            String q = searchQuery.trim().toLowerCase();
+            products = products.stream()
+                .filter(p -> p.name().toLowerCase().contains(q) ||
+                             p.category().toLowerCase().contains(q) ||
+                             p.description().toLowerCase().contains(q))
+                .collect(Collectors.toList());
+            
+            request.setAttribute("searchQuery", searchQuery.trim());
+        }
+
         request.setAttribute("products", products);
         request.setAttribute("pageTitle", "Product Catalog");
         
