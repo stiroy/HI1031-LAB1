@@ -23,3 +23,16 @@ INSERT INTO T_users (username, password_hash) VALUES ('testuser', 'ef92b778bafe7
 
 CREATE VIEW V_user_roles AS
 SELECT u.username, u.is_active, ur.role_name FROM T_users u JOIN T_user_roles ur ON u.username = ur.username;
+
+-- dummy users password is 123 :-)
+INSERT INTO T_users (username, password_hash, is_active)
+VALUES
+  ('admin', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', true),
+  ('employee', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', true),
+  ('user', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', true);
+
+INSERT INTO T_user_roles (username, role_name)
+VALUES 
+  ('admin', 'ADMIN'),
+  ('employee', 'EMPLOYEE'),
+  ('user', 'CUSTOMER');
