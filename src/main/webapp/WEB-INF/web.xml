@@ -1,8 +1,8 @@
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
-                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
-         version="6.1">
+<web-app    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+                    https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+            version="6.1">
 
     <welcome-file-list>
         <welcome-file>/WEB-INF/views/index.jsp</welcome-file>
@@ -49,8 +49,8 @@
         <auth-method>FORM</auth-method>
         <realm-name>postgres</realm-name>
         <form-login-config>
-            <form-login-page>/app/login</form-login-page>
-            <form-error-page>/app/login-error</form-error-page>
+            <form-login-page>/app/login.jsp</form-login-page>
+            <form-error-page>/app/login-error.jsp</form-error-page>
         </form-login-config>
     </login-config>
 
