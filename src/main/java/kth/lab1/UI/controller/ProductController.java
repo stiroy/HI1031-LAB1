@@ -9,7 +9,7 @@ public class ProductController {
 
     private final ModelFacade Handler = new ModelFacade();
 
-    public String handleDetail(HttpServletRequest req, HttpServletResponse resp) throws IllegalArgumentException {
+    public String handleDetail(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String idParam = req.getParameter("id");
         
         if (idParam == null || idParam.isBlank()) {
@@ -22,8 +22,8 @@ public class ProductController {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
-            ProductDTO product = Handler.getProductByID(itemId);
-            req.setAttribute("product", product);
+        ProductDTO product = Handler.getProductByID(itemId);
+        req.setAttribute("product", product);
 
        return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
     }

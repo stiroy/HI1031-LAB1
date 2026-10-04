@@ -11,7 +11,7 @@
             </span>
             <h1 class="text-4xl font-extrabold tracking-tight">Explore Our Product Catalog</h1>
             <p class="text-slate-300 text-base leading-relaxed">
-                Welcome, <strong class="text-teal-400 font-semibold">${currentUser}</strong>. Browse our collection, manage items, or check system metrics.
+                Welcome, <strong class="text-teal-400 font-semibold">${sessionScope.user.username}</strong>. Browse our collection, manage items, or check system metrics.
             </p>
             <div class="pt-2 flex flex-wrap gap-4">
                 <a href="${pageContext.request.contextPath}/app/itemDetail?id=101" 
