@@ -25,10 +25,10 @@ public class ProductController {
        try {
             ProductDTO product = Handler.getProductByID(itemId);
             req.setAttribute("product", product);
-        return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
        } catch (Exception e) {
         // TODO: handle exception
        } 
+       return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
     }
 
     public String handleSearch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
