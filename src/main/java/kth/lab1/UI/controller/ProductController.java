@@ -42,8 +42,9 @@ public class ProductController {
 
 
     public String handleCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<ProductDTO> products = Handler.getProducts();
-                
+        //List<ProductDTO> products = Handler.getProducts();
+        List<ProductDTO> products = getSampleProducts();  
+        
         request.setAttribute("products", products);
         request.setAttribute("pageTitle", "Product Catalog");
         
