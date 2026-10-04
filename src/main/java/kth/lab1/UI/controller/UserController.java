@@ -7,14 +7,13 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
 
     public String handleProfile(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+        String username = request.getRemoteUser();
         /*if (session == null || session.getAttribute("user") == null) {
             return "redirect:/login.jsp";
         }*/
 
-        Object user = session.getAttribute("user");
+        request.setAttribute("username", username);
         request.setAttribute("pageTitle", "My Account Profile");
-        request.setAttribute("accountDetails", user);
         return "userProfile";
     }
 }
