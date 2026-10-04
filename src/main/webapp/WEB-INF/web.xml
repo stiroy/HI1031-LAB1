@@ -45,6 +45,19 @@
         </auth-constraint>
     </security-constraint>
 
+    <!-- Everyone Area -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected user Area</web-resource-name>
+            <url-pattern>/app/userProfile</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>EMPLOYEE</role-name>
+            <role-name>CUSTOMER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>postgres</realm-name>
