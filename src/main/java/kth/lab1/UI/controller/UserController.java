@@ -8,9 +8,9 @@ public class UserController {
 
     public String handleProfile(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        /*if (session == null || session.getAttribute("user") == null) {
             return "redirect:/login.jsp";
-        }
+        }*/
 
         Object user = session.getAttribute("user");
         request.setAttribute("pageTitle", "My Account Profile");
