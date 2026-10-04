@@ -13,8 +13,7 @@ public abstract class DAO {
         try {
             connection.commit();
         } catch (SQLException e) {
-            handleException(connection,
-                    "Failed to commit", e);
+            handleException(connection,"Failed to commit", e);
         }
     }
 //Rollbacks transaction
@@ -24,9 +23,7 @@ public abstract class DAO {
                 connection.rollback();
             }
         } catch (SQLException e) {
-            System.out.println(
-                "Problem during rollback: "
-                + e.getMessage());
+            System.out.println("Problem during rollback: " + e.getMessage());
         }
     }
 //database exeception handling

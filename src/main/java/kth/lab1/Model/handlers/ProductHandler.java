@@ -24,25 +24,36 @@ public class ProductHandler {
     }
 
     public Optional<Product> searchProductByID(int productID) throws DataAccessException{
+        if(productID>0){
         return products.searchByID(productID);
+    }else{throw new IllegalArgumentException("Product ID cannot be zero or below");}
     }
 
     public void addProduct(Product product) throws DataAccessException{
+    if(!product.name().isBlank())
         products.addProduct(product); 
     }
 
     public void removeProduct(int productID) throws DataAccessException{
+    if(productID>0){
         products.removeProduct(productID);
+    }else{
+        throw new IllegalArgumentException("Product ID cannot be zero or below");
+    }
     }
 
     public void updateProduct(Product product) throws DataAccessException{
-        products.updateProduct(product);
+        if(!product.name().isBlank()){
+            products.updateProduct(product);
+        }
+        else{throw new IllegalArgumentException("Product must have a explict name");}
     }
 
     public void updateQuantity(int productID, int quantity) throws DataAccessException{
-        if(quantity>0){
+        if(quantity>=0){
             products.updateQuantity(productID, quantity);
         }
+        else{throw new IllegalArgumentException("Quantity cannot be negative");}
     }
 
 }

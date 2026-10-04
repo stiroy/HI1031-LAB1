@@ -18,3 +18,8 @@ VALUES ('exampleUser', 'EMPLOYEE');
 
   SELECT * FROM V_employee_orders;
   SELECT * FROM T_products;
+
+INSERT INTO T_users (username, password_hash) VALUES ('testuser', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f');
+
+CREATE VIEW V_user_roles AS
+SELECT u.username, u.is_active, ur.role_name FROM T_users u JOIN T_user_roles ur ON u.username = ur.username;

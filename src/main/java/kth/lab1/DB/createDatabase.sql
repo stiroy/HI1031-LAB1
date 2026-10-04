@@ -28,9 +28,9 @@ VALUES
     ('CUSTOMER'),
     ('EMPLOYEE'),
     ('ADMIN');
-
+-- Only one role per username
 CREATE TABLE T_user_roles (
-    username VARCHAR(100) NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
     role_name VARCHAR(20) NOT NULL,
     PRIMARY KEY (username, role_name),
     CONSTRAINT fk_user_roles_user
