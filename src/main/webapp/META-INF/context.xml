@@ -30,8 +30,7 @@
            
         <!-- Enable Password Hashing (SSHA, SHA and MD5) -->
         <CredentialHandler className="org.apache.catalina.realm.MessageDigestCredentialHandler"
-                           algorithm="SHA-256"
-                           encoding="hex" />
+                           algorithm="SHA-256"/>
     </Realm>
 
 </Context>
