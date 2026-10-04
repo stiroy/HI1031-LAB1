@@ -45,6 +45,15 @@
         </auth-constraint>
     </security-constraint>
 
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>posrgres</realm-name>
+        <form-login-config>
+            <form-login-page>/app/login</form-login-page>
+            <form-error-page>/app/login-error</form-error-page>
+        </form-login-config>
+    </login-config>
+
     <!-- ============================================================ -->
     <!-- SECURITY ROLES (Application Role Declarations)               -->
     <!-- ============================================================ -->
@@ -57,15 +66,6 @@
     <security-role>
         <role-name>CUSTOMER</role-name>
     </security-role>
-
-    <login-config>
-        <auth-method>FORM</auth-method>
-        <realm-name>posrgres</realm-name>
-        <form-login-config>
-            <form-login-page>/app/login</form-login-page>
-            <form-error-page>/app/login-error</form-error-page>
-        </form-login-config>
-    </login-config>
 
     <!-- Make sure JNDI can see jdbc-->
     <resource-ref>
