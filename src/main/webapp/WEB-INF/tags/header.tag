@@ -13,20 +13,22 @@
             <a href="${pageContext.request.contextPath}/app/status" class="hover:text-teal-300 transition">Status</a>
 
             <!-- Session Navigation Check -->
-            <% if (session != null && session.getAttribute("user") != null) { %>
-                <span class="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
-                    👤 <%= session.getAttribute("user") %>
-                </span>
-                <a href="${pageContext.request.contextPath}/app/logout" 
-                   class="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 px-3 py-1.5 rounded-md transition">
-                    Logout
-                </a>
-            <% } else { %>
-                <a href="${pageContext.request.contextPath}/login.jsp" 
-                   class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-3 py-1.5 rounded-md text-xs transition">
-                    Sign In
-                </a>
-            <% } %>
+            <% if (request.getRemoteUser() != null) { %>
+                    <a href="${pageContext.request.contextPath}/app/userProfile" 
+                       class="text-xs text-slate-300 hover:text-teal-300 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-700 transition flex items-center space-x-1.5">
+                        <span>👤</span>
+                        <span class="font-semibold"><%= request.getRemoteUser() %></span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/app/logout" 
+                       class="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 px-3 py-1.5 rounded-md transition">
+                        Logout
+                    </a>
+                <% } else { %>
+                    <a href="${pageContext.request.contextPath}/login.jsp" 
+                       class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-md text-xs transition shadow-sm">
+                        Sign In
+                    </a>
+                <% } %>
         </div>
     </div>
 </nav>
