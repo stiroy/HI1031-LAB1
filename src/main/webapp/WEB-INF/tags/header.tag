@@ -24,7 +24,7 @@
                         Logout
                     </a>
                 <% } else { %>
-                    <a href="${pageContext.request.contextPath}/login.jsp" 
+                    <a href="${pageContext.request.contextPath}/app/userProfile" 
                        class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-md text-xs transition shadow-sm">
                         Sign In
                     </a>
