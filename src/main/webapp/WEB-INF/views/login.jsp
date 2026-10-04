@@ -1,15 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-
 <% request.setAttribute("pageTitle", "Sign In - Webshop"); %>
 <%@ include file="common/header.jsp" %>
 
+<!-- Scripting elements are disallowed inside login form -->
+<!-- Therefore it has to be hardcoded and sadly that makes -->
+<!-- The code monolithic and harder to maintain with tailwind -->
 <div class="max-w-md mx-auto my-12 bg-white rounded-xl shadow-md border border-slate-200 p-8">
     <div class="mb-6 text-center">
         <h1 class="text-2xl font-bold text-slate-900">Sign in to your account</h1>
         <p class="text-xs text-slate-500 mt-1">Enter your credentials to access your session</p>
     </div>
 
-    <!-- Error Alert Box -->
     <% if (request.getAttribute("errorMessage") != null) { %>
         <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-xs font-semibold text-red-700">
             ${errorMessage}
