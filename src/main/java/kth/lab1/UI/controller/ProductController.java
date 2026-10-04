@@ -22,11 +22,13 @@ public class ProductController {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
-
-        ProductDTO product = Handler.getProductByID(itemId);
-
-        req.setAttribute("product", product);
+       try {
+            ProductDTO product = Handler.getProductByID(itemId);
+            req.setAttribute("product", product);
         return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
+       } catch (Exception e) {
+        // TODO: handle exception
+       } 
     }
 
     public String handleSearch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
