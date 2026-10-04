@@ -22,10 +22,10 @@
     <Realm className="org.apache.catalina.realm.DataSourceRealm"
             dataSourceName="jdbc/postgres"
             localDataSource="true"
-            userTable="T_customers" 
+            userTable="T_users" 
             userNameCol="username" 
             userCredCol="password_hash"
-            userRoleTable="user_roles"
+            userRoleTable="T_user_roles"
             roleNameCol="role_name">
            
         <!-- Enable Password Hashing (SSHA, SHA and MD5) -->
