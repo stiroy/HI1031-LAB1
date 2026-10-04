@@ -17,7 +17,7 @@
                     ${sessionScope.user.substring(0, 1).toUpperCase()}
                 </div>
                 <div>
-                    <h2 class="text-base font-semibold text-slate-800">${sessionScope.username}</h2>
+                    <h2 class="text-base font-semibold text-slate-800">${requestScope.username}</h2>
                     <span class="inline-block px-2 py-0.5 text-xs rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
                         Active User
                     </span>
@@ -29,7 +29,7 @@
             <div class="grid grid-cols-2 gap-4 text-xs font-mono">
                 <div>
                     <span class="text-slate-400 block uppercase">Username</span>
-                    <span class="text-slate-800 font-bold">${sessionScope.username}</span>
+                    <span class="text-slate-800 font-bold">${requestScope.username}</span>
                 </div>
                 <div>
                     <span class="text-slate-400 block uppercase">Session ID</span>
