@@ -47,7 +47,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
             closeResultSet(retrieveSet, closeMessage);   
             st.close();
             connection.close();         
-        } catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
+        } catch(SQLException | DataAccessException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
         return retrievedProducts;
     }
 
@@ -69,7 +69,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
             closeResultSet(searchResultSet, closeMessage);
             ps.close();
             connection.close();
-        }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search by name query failed: ", e);}
+        }catch(SQLException | DataAccessException e ){throw new DataAccessException("Search by name query failed: ", e);}
         return searchProductResult;
     }
 
@@ -93,7 +93,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
         ps.close();
         connection.close();
         return Optional.empty();
-        }catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Search product by ID query failed: ", e);}
+        }catch(SQLException | DataAccessException e ){throw new DataAccessException("Search product by ID query failed: ", e);}
     }
     //Insert Info about product name, description, category and quantity, price product id is created upon insert by database, for employee use only
     public void addProduct(Product product) throws DataAccessException {
@@ -116,7 +116,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
         commit(connection);
         ps.close();
         connection.close();
-        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+        }catch(SQLException  e){handleException(connection, failureMsg, e);}
     }
 
     public void removeProduct(int productID) throws DataAccessException{
@@ -135,7 +135,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
         commit(connection);
         ps.close();
         connection.close();
-        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+        }catch(SQLException  e){handleException(connection, failureMsg, e);}
     }
 //Updates information about an products, such as its name, description, category, price
     public void updateProduct(Product product)throws DataAccessException{
@@ -161,7 +161,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
         commit(connection);
         ps.close();
         connection.close();
-        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+        }catch(SQLException e){handleException(connection, failureMsg, e);}
     }
 //updates the quantity of a given product
     public void updateQuantity(int productID, int quantity)throws DataAccessException{
@@ -181,7 +181,7 @@ private Product mapProduct(ResultSet rs)throws SQLException {
         commit(connection);
         ps.close();
         connection.close();
-        } catch (SQLException | ClassNotFoundException e) {handleException(connection ,failureMsg, e);
+        } catch (SQLException  e) {handleException(connection ,failureMsg, e);
         }
     }
 }

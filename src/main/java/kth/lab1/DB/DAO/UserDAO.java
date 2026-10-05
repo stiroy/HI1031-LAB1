@@ -39,6 +39,6 @@ public class UserDAO extends DAO implements UserRepository{
         userStatement.close();
         roleStatement.close();
         connection.close();
-        }catch(SQLException | ClassNotFoundException e){handleException(connection, failureMsg, e);}
+        }catch(SQLException e){handleException(connection, failureMsg, e);}
     }
 }

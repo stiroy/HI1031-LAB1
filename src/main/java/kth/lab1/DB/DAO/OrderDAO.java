@@ -76,7 +76,7 @@ public class OrderDAO extends DAO implements OrderRepository {
         orderStatement.close();
         totalStmt.close();
         connection.close();
-        }catch(SQLException | ClassNotFoundException | IllegalArgumentException e){handleException(connection, failureMsg, e);}  
+        }catch(SQLException | IllegalArgumentException e){handleException(connection, failureMsg, e);}  
     }
 
     //Employee packs given orderID
@@ -84,7 +84,7 @@ public class OrderDAO extends DAO implements OrderRepository {
         Connection connection = null;
         try {
             connection = DBManager.getConnection();
-            String sql ="UPDATE T_orders SET order_status = 'PACKED', packed_by = ?, packed_at = CURRENT_TIMESTAMP WHERE order_id = ? AND order_status = 'UNPACKED'";
+            String sql ="UPDATE T_orders SET order_status = 'PACKED', packed_by = ?, packed_at = CURRENT_TIMESTAMP WHERE order_id = ? AND order_status = 'PENDING'";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ps.setInt(2, orderID);
@@ -95,7 +95,7 @@ public class OrderDAO extends DAO implements OrderRepository {
             commit(connection);
             ps.close();
             connection.close();
-        } catch (SQLException | ClassNotFoundException e) {handleException(connection, "Failed to pack order: ", e);}
+        } catch (SQLException e) {handleException(connection, "Failed to pack order: ", e);}
   
     }
 
@@ -131,7 +131,7 @@ public class OrderDAO extends DAO implements OrderRepository {
             closeResultSet(retrieveSet, closeMessage);   
             ps.close();
             connection.close();    
-        } catch(SQLException | ClassNotFoundException | DataAccessException e ){throw new DataAccessException("Fetch orders query failed: ", e);}
+        } catch(SQLException  | DataAccessException e ){throw new DataAccessException("Fetch orders query failed: ", e);}
         return retrievedOrders;
     }
 
