@@ -111,10 +111,19 @@ public class CartController {
             LocalDateTime.now()
         );
     
+        //TODO: SAVES IN SESSION ORDER CAUSE DB IS NOT WORKING
+        HttpSession session = request.getSession(true);
+        List<OrderDTO> orderHistory = (List<OrderDTO>) session.getAttribute("orderHistory");
+        if (orderHistory == null) {
+            orderHistory = new ArrayList<>();
+        }
+        orderHistory.add(0, order); // Add newest orders to the top
+        session.setAttribute("orderHistory", orderHistory);
+
         request.setAttribute("completedOrder", order);
         request.setAttribute("pageTitle", "Order Confirmation");
-    
         cart.clear();
+        
         return "checkoutSuccess";
     }
 }

@@ -17,6 +17,9 @@
                     ${sessionScope.cart.totalItemCount}
                 </span>
             </a>
+            <a href="${pageContext.request.contextPath}/app/orders" class="hover:text-teal-300 transition">
+                My Orders
+            </a>
 
             <!-- Session Navigation Check -->
             <% if (request.getRemoteUser() != null) { %>

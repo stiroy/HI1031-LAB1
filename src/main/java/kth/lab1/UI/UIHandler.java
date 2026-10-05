@@ -36,22 +36,21 @@ public class UIHandler extends HttpServlet {
 
         private void attachActions() {
         // --- Product & Catalog Actions ---
-        actionRegistry.put("itemDetail", productController::handleDetail);
-        actionRegistry.put("catalog", productController::handleCatalog);
-        actionRegistry.put("search", productController::handleCatalog);
         actionRegistry.put("status", statusController::handleStatus);
         actionRegistry.put("index", homeController::handleHome);
         actionRegistry.put("logout", sessionController::handleLogout);
         actionRegistry.put("userProfile", userController::handleProfile);
+        actionRegistry.put("orders", userController::handleOrderHistory);
+        // catalog fuctions
+        actionRegistry.put("itemDetail", productController::handleDetail);
+        actionRegistry.put("catalog", productController::handleCatalog);
+        actionRegistry.put("search", productController::handleCatalog);
+        // cart functions
         actionRegistry.put("cart", cartController::handleViewCart);
         actionRegistry.put("addToCart", cartController::handleAddToCart);
         actionRegistry.put("updateCart", cartController::handleUpdateCart);
         actionRegistry.put("removeFromCart", cartController::handleRemoveFromCart);
         actionRegistry.put("checkout", cartController::handleCheckout);
-        //actionRegistry.put("search", req -> handleSearch(req)); // Lambda method reference or arrow
-        //actionRegistry.put("userProfile", req -> {throw new UnsupportedOperationException("Userprofile is not implemented yet!");});
-        //actionRegistry.put("addReview", req -> {throw new UnsupportedOperationException("handleAddReview is not implemented yet!");});
-        //actionRegistry.put("showAuthors", req -> {throw new UnsupportedOperationException("handleShowAuthor is not implemented yet!");});
     }
 
     @Override
