@@ -11,7 +11,7 @@ public class HomeController {
         if (request.isUserInRole("ADMIN")) {
             return "redirect:/admin/index";
         } else if (request.isUserInRole("EMPLOYEE")) {
-            return "redirect:/Employee/index";
+            return "redirect:/Employee/employeeOrders.jsp";
         } else {
             // Defaults to CUSTOMER or unauthenticated guest view
             return "index";
