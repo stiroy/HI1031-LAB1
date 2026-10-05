@@ -46,14 +46,15 @@ public class ModelFacade {
 
     //Called when a customer signs up
     public void customerSignUp(UserDTO customer) throws DataAccessException{
-        User newCustomer = new User(customer.username(), customer.role(), customer.password());
+        //password should be a secret
+        /*User newCustomer = new User(customer.getUsername(), customer.getRole(), customer.getPassword());
         try {
             userHandler.createCustomer(newCustomer);
         } catch (DataAccessException e) {
              throw new DataAccessException("Could not create customer with username: "+ customer.username(),e);
-        }
+        }*/
     }
-
+/* 
     //Called when a customer places an order from shopping cart
     public void placeOrder(UserDTO activeCustomerDTO, List<OrderProductDTO> shoppingCart) throws DataAccessException{
         List<OrderProduct> orderedProducts = shoppingCart.stream()
@@ -62,7 +63,7 @@ public class ModelFacade {
             orderedProduct.product().description(), orderedProduct.product().category(),
             orderedProduct.product().price(), orderedProduct.product().quantity()), 
             orderedProduct.quantity())).toList();
-        String activeCustomerUsername = activeCustomerDTO.username();
+        String activeCustomerUsername = activeCustomerDTO.getUsername();
         try {
             orderHandler.placeOrder(activeCustomerUsername, orderedProducts);
         } catch (DataAccessException e) {
@@ -73,14 +74,14 @@ public class ModelFacade {
     // ----------- ADMIN METHODS -------------------------------------
     //For admin to create Employees
     public void createEmployee(UserDTO employee) throws DataAccessException{
-        User newEmployee = new User(employee.username(), employee.role(), employee.password());
+        /*User newEmployee = new User(employee.username(), employee.role(), employee.password());
         try {
             userHandler.createEmployee(newEmployee);
         } catch (DataAccessException e) {
-             throw new DataAccessException("Could not create employee with username: "+ employee.username(),e);
-        }
+            throw new DataAccessException("Could not create employee with username: "+ employee.username(),e);
+        }*/
+/* 
     }
-
 
     // ----------- EMPLOYEE METHODS -------------------------------------
 
@@ -166,14 +167,14 @@ public class ModelFacade {
     }
 
     public void packOrder(UserDTO activeEmployee, int orderID) throws DataAccessException{
-        String activeEmployeeUsername = activeEmployee.username();
+        String activeEmployeeUsername = activeEmployee.getUsername();
         try {
             orderHandler.packOrder(activeEmployeeUsername, orderID);
         } catch (DataAccessException e) {
              throw new DataAccessException("Failed to pack order with id: "+orderID,e);
         }
     }
-
+*/
 
 }
 
