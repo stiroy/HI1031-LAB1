@@ -85,7 +85,7 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
         orderHandler.placeOrder(activeCustomerUsername,orderedProducts);
     } catch (DataAccessException e) {
         throw new DataAccessException(
-            "Could not place order for customer with username: " + activeCustomerUsername, e);
+            "Could not place order for customer with username: " + activeCustomerUsername +"order size: "+ orderedProducts.size(), e);
     }
 }
 
