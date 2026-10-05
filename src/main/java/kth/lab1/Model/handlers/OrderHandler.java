@@ -36,12 +36,9 @@ public class OrderHandler {
         orders.placeOrder(customerUsername, orderedProducts, orderID);
     }
 
-    public void packOrder(String employeeUsername, int orderID) throws DataAccessException{
+    public void packOrder(String employeeUsername, String orderID) throws DataAccessException{
         if(employeeUsername.isBlank()){
             throw new IllegalArgumentException("Invalid username");
-        }
-        if(orderID <= 0){
-            throw new IllegalArgumentException("Invalid order id");
         }
         orders.packOrder(employeeUsername, orderID);
     }

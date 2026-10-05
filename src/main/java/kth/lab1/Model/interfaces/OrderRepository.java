@@ -12,7 +12,7 @@ public interface OrderRepository {
     void placeOrder(String customerUsername, List<OrderProduct> orderedProducts, String orderID) throws DataAccessException;
 
 //employee
-    void packOrder(String username, int orderID)throws DataAccessException;
+    void packOrder(String username, String orderID)throws DataAccessException;
 
     List<CustomerOrder>viewOrders(String customerUsername) throws DataAccessException;
 }
