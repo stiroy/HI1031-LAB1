@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:layout pageTitle="Admin Dashboard">
+<t:layout title="Admin Dashboard">
     <t:pageHeader 
         title="Admin Control Center" 
         subtitle="Manage product catalog, user permissions, and system metrics." />
