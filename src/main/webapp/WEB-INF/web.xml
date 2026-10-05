@@ -50,6 +50,7 @@
         <web-resource-collection>
             <web-resource-name>Protected user Area</web-resource-name>
             <url-pattern>/app/userProfile</url-pattern>
+            <url-pattern>/app/checkout</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMIN</role-name>
