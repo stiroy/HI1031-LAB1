@@ -4,32 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import kth.lab1.Model.ModelFacade;
 import kth.lab1.UI.DTO.OrderDTO;
+import kth.lab1.UI.DTO.UserDTO;
 
 public class EmployeeController {
 
-    private List<OrderDTO> getGlobalOrders(HttpServletRequest request) {
-        List<OrderDTO> orders = (List<OrderDTO>) request.getServletContext().getAttribute("globalOrders");
-        if (orders == null) {
-            orders = new ArrayList<>();
-            request.getServletContext().setAttribute("globalOrders", orders);
-        }
-        return orders;
-    }
+    private final ModelFacade modelFacade = new ModelFacade();
 
     public String handleViewOrders(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("orders", getGlobalOrders(request));
+        request.setAttribute("orders", modelFacade.viewAllCustomerOrders());
         request.setAttribute("pageTitle", "Warehouse - Pack Orders");
         return "employeeOrders";
     }
 
     public String handlePackOrder(HttpServletRequest request, HttpServletResponse response) {
-        String orderId = request.getParameter("orderId");
+        String orderIdParam = request.getParameter("orderId");
+        String employee = request.getRemoteUser();
+
+        if (orderIdParam != null && !orderIdParam.trim().isEmpty()) {
+            try {
+                UserDTO employeeUser = new UserDTO(0, employee, orderIdParam, employee);
+                
+                modelFacade.packOrder(employeeUser, orderIdParam);
+                
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (orderId != null && !orderId.trim().isEmpty()) {
             // 1. Update status in Global Warehouse Queue
-            @SuppressWarnings("unchecked")
+            /*@SuppressWarnings("unchecked")
             List<OrderDTO> globalOrders = (List<OrderDTO>) request.getServletContext().getAttribute("globalOrders");
 
             if (globalOrders != null) {
@@ -49,7 +55,6 @@ public class EmployeeController {
                         globalOrders.set(i, packedOrder);
 
                         // 2. Also update in the user's active session order history if present
-                        @SuppressWarnings("unchecked")
                         List<OrderDTO> userOrders = (List<OrderDTO>) request.getSession().getAttribute("orderHistory");
                         if (userOrders != null) {
                             for (int j = 0; j < userOrders.size(); j++) {
@@ -62,7 +67,7 @@ public class EmployeeController {
                         break;
                     }
                 }
-            }
+            }*/
         }
 
         return "redirect:/app/employeeOrders";
