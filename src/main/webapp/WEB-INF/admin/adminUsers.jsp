@@ -43,7 +43,7 @@
                                     <input type="hidden" name="userName value="${u.username}" />
                                     <select name="role" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1 bg-white font-medium focus:ring-2 focus:ring-purple-500 outline-none">
                                         <option value="CUSTOMER" ${u.role == 'CUSTOMER' ? 'selected' : ''}>CUSTOMER</option>
-                                        <option value="WAREHOUSE" ${u.role == 'WAREHOUSE' ? 'selected' : ''}>WAREHOUSE</option>
+                                        <option value="EMPLOYEE" ${u.role == 'EMPLOYEE' ? 'selected' : ''}>EMPLOYEE</option>
                                         <option value="ADMIN" ${u.role == 'ADMIN' ? 'selected' : ''}>ADMIN</option>
                                     </select>
                                     <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-1 rounded-lg text-xs transition shadow-sm">
