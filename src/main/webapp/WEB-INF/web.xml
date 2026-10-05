@@ -16,7 +16,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected Admin Area</web-resource-name>
-            <url-pattern>/app/status</url-pattern>
+            <url-pattern>/admin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMIN</role-name>
@@ -27,7 +27,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected Employee Area</web-resource-name>
-            <url-pattern>/app/employee/*</url-pattern>
+            <url-pattern>/employee/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>EMPLOYEE</role-name>
