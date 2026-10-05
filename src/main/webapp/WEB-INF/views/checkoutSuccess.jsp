@@ -53,7 +53,7 @@
 
             <!-- Action Buttons -->
             <div class="pt-6 flex justify-center space-x-4">
-                <a href="${pageContext.request.contextPath}/app/index" 
+                <a href="${pageContext.request.contextPath}/app/catalog" 
                    class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-lg transition shadow-sm">
                     Back to Catalog
                 </a>
