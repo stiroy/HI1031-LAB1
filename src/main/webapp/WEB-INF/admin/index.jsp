@@ -28,7 +28,7 @@
     <!-- Quick Navigation Modules -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Catalog Control -->
-        <a href="${pageContext.request.contextPath}/app/adminCatalog" 
+        <a href="${pageContext.request.contextPath}/admin/adminCatalog" 
            class="group bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-teal-500/50 p-6 rounded-xl transition shadow-lg flex flex-col justify-between">
             <div>
                 <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
@@ -46,7 +46,7 @@
         </a>
 
         <!-- User & RBAC Management -->
-        <a href="${pageContext.request.contextPath}/app/adminUsers" 
+        <a href="${pageContext.request.contextPath}/admin/adminUsers" 
            class="group bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-sky-500/50 p-6 rounded-xl transition shadow-lg flex flex-col justify-between">
             <div>
                 <div class="w-12 h-12 bg-sky-500/10 text-sky-400 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
@@ -64,7 +64,7 @@
         </a>
 
         <!-- System & Database Status -->
-        <a href="${pageContext.request.contextPath}/app/adminStatus" 
+        <a href="${pageContext.request.contextPath}/admin/status" 
            class="group bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-purple-500/50 p-6 rounded-xl transition shadow-lg flex flex-col justify-between">
             <div>
                 <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
