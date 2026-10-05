@@ -54,14 +54,14 @@ public class ModelFacade {
              throw new DataAccessException("Could not create customer with username: "+ customer.username(),e);
         }*/
     }
-/* 
+ 
     //Called when a customer places an order from shopping cart
     public void placeOrder(UserDTO activeCustomerDTO, List<OrderProductDTO> shoppingCart) throws DataAccessException{
         List<OrderProduct> orderedProducts = shoppingCart.stream()
         .map(orderedProduct-> new OrderProduct(
-            new Product(orderedProduct.product().id(), orderedProduct.product().name(), 
-            orderedProduct.product().description(), orderedProduct.product().category(),
-            orderedProduct.product().price(), orderedProduct.product().quantity()), 
+            new Product(orderedProduct.product().getId(), orderedProduct.product().getName(), 
+            orderedProduct.product().getDescription(), orderedProduct.product().getCategory(),
+            orderedProduct.product().getPrice(), orderedProduct.product().getQuantity()), 
             orderedProduct.quantity())).toList();
         String activeCustomerUsername = activeCustomerDTO.getUsername();
         try {
@@ -74,20 +74,19 @@ public class ModelFacade {
     // ----------- ADMIN METHODS -------------------------------------
     //For admin to create Employees
     public void createEmployee(UserDTO employee) throws DataAccessException{
-        /*User newEmployee = new User(employee.username(), employee.role(), employee.password());
+        User newEmployee = new User(employee.getUsername(), employee.getRole(), "placeholder");
         try {
             userHandler.createEmployee(newEmployee);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Could not create employee with username: "+ employee.username(),e);
+            throw new DataAccessException("Could not create employee with username: "+ employee.getUsername(),e);
         }
-
-    }*/
+ 
+    }
 
     // ----------- EMPLOYEE METHODS -------------------------------------
 
     //Enables search by id 
     // REPLACE PLACEHOLDER INFORMATION
-    /*
     public ProductDTO getProductByID(int id) throws DataAccessException {
         try {
             Product product = productHandler.searchProductByID(id);
@@ -98,7 +97,7 @@ public class ModelFacade {
         } catch (DataAccessException e) {
             throw new DataAccessException("Failed to get product with id: " + id, e);
         }
-    }*/
+    }
 
     // Get Products
     public List<ProductDTO> getProducts() throws DataAccessException {
@@ -112,44 +111,44 @@ public class ModelFacade {
             throw new DataAccessException("Failed to retrieve products", e);
         }
     }
-    /* 
+
     //Adds product to database
     public void addProduct(ProductDTO productDTO) throws DataAccessException{
-        Product product = new Product(-1, productDTO.name(), productDTO.description(), productDTO.category(), productDTO.price(), productDTO.quantity());
+        Product product = new Product(-1, productDTO.getName(), productDTO.getDescription(), productDTO.getCategory(), productDTO.getPrice(), productDTO.getQuantity());
         try {
             productHandler.addProduct(product);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Failed to add product " + productDTO.name() + " to database",e);
+            throw new DataAccessException("Failed to add product " + productDTO.getName() + " to database",e);
         }
     }
 
     //Removes a product from product table
     public void removeProduct(ProductDTO productDTO) throws DataAccessException{
-        int idToRemove = productDTO.id();
+        int idToRemove = productDTO.getId();
         try {
             productHandler.removeProduct(idToRemove);
         } catch (DataAccessException e) {
-             throw new DataAccessException("Failed to remove product with id: "+productDTO.id(),e);
+             throw new DataAccessException("Failed to remove product with id: "+productDTO.getId(),e);
         }
     }
 
     //Allows for all attributes except for id to be changed
     public void updateProduct(ProductDTO productDTO) throws DataAccessException{
-        Product product = new Product(productDTO.id(), productDTO.name(), productDTO.description(), productDTO.category(), productDTO.price(), productDTO.quantity());
+        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getDescription(), productDTO.getCategory(), productDTO.getPrice(), productDTO.getQuantity());
         try {
             productHandler.updateProduct(product);
         } catch (DataAccessException e) {
-             throw new DataAccessException("Failed to update product with id: "+productDTO.id(),e);
+             throw new DataAccessException("Failed to update product with id: "+productDTO.getId(),e);
         }
     }
 
     //Updates quantity of product in stock
     public void updateQuantity(ProductDTO productDTO, int quantity) throws DataAccessException{
-        int productID = productDTO.id();
+        int productID = productDTO.getId();
         try {
             productHandler.updateQuantity(productID, quantity);
         } catch (DataAccessException e) {
-             throw new DataAccessException("Failed to update quantity of product with id: "+productDTO.id(),e);
+             throw new DataAccessException("Failed to update quantity of product with id: "+productDTO.getId(),e);
         }
     }
 
@@ -175,7 +174,7 @@ public class ModelFacade {
              throw new DataAccessException("Failed to pack order with id: "+orderID,e);
         }
     }
-*/
+
 
 }
 
