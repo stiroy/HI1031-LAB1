@@ -30,6 +30,7 @@ public class CartController {
         String productIdParam = request.getParameter("productId");
         String quantityParam = request.getParameter("quantity");
 
+        // TODO: database is currently broken solved temporarly
         if (productIdParam != null && !productIdParam.trim().isEmpty()) {
             try {
                 int productId = Integer.parseInt(productIdParam.trim());
@@ -52,6 +53,12 @@ public class CartController {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+        }
+
+        // reads the page users was on and redirects back
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isEmpty()) {
+            return "redirect:" + referer;
         }
 
         return "redirect:/app/cart";
