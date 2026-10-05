@@ -25,7 +25,7 @@
                     <a href="${pageContext.request.contextPath}/app/userProfile" 
                        class="text-xs text-slate-300 hover:text-teal-300 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-700 transition flex items-center space-x-1.5">
                         <span>👤</span>
-                        <span class="font-semibold">${requestScope.username}</span>
+                        <span class="font-semibold"><%= requestScope.username %></span>
                     </a>
                     <a href="${pageContext.request.contextPath}/app/logout" 
                        class="text-xs bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 px-3 py-1.5 rounded-md transition">
