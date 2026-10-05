@@ -184,7 +184,7 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
              co.productName(), co.quantity(), co.unit_price(), co.orderStatus(), co.totalPrice())).toList();
     }
 
-    public void packOrder(UserDTO activeEmployee, int orderID) throws DataAccessException{
+    public void packOrder(UserDTO activeEmployee, String orderID) throws DataAccessException{
         String activeEmployeeUsername = activeEmployee.getUsername();
         try {
             orderHandler.packOrder(activeEmployeeUsername, orderID);
