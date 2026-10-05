@@ -3,7 +3,8 @@ package kth.lab1.Model.records;
 // allows a customer to buy a desired quantity of product
 public record OrderProduct(
     Product product,
-    int quantity
+    int quantity,
+    String orderID
 ) {
 
     public OrderProduct {

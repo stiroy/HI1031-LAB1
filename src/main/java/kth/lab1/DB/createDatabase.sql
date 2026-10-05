@@ -62,7 +62,7 @@ CREATE TABLE T_user_roles (
 
 
 CREATE TABLE T_orders (
-    order_id SERIAL PRIMARY KEY,
+    order_id VARCHAR(20) PRIMARY KEY,
     customer_username VARCHAR(100) NOT NULL,
     order_status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
         CHECK (order_status IN ('PENDING', 'PACKED')),
@@ -84,7 +84,7 @@ CREATE TABLE T_orders (
 
 CREATE TABLE T_order_product (
     order_product_id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL,
+    order_id VARCHAR(20) NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
     unit_price DECIMAL(10,2) NOT NULL,

@@ -108,7 +108,7 @@ public class CartController {
             LocalDateTime.now(),
             "PENDING"
         );
-    
+        modelFacade.placeOrder(order);
         //TODO: SAVES IN SESSION ORDER CAUSE DB IS NOT WORKING
         HttpSession session = request.getSession(true);
         List<OrderDTO> orderHistory = (List<OrderDTO>) session.getAttribute("orderHistory");

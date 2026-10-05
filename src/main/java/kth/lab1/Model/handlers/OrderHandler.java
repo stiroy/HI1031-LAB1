@@ -23,7 +23,7 @@ public class OrderHandler {
         if (orderedProducts.isEmpty()) {
             throw new IllegalArgumentException("Order cannot be empty");
         }
-
+        String orderID = orderedProducts.get(0).orderID();
         for (OrderProduct orderedProduct : orderedProducts) {
             Product product = orderedProduct.product();
             if (orderedProduct.quantity() <= 0) {
@@ -33,7 +33,7 @@ public class OrderHandler {
                 throw new IllegalArgumentException("Not enough stock in inventory for " + product.name());
             }
         }
-        orders.placeOrder(customerUsername, orderedProducts);
+        orders.placeOrder(customerUsername, orderedProducts, orderID);
     }
 
     public void packOrder(String employeeUsername, int orderID) throws DataAccessException{

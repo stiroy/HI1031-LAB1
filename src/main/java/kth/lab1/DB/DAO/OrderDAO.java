@@ -20,20 +20,21 @@ public class OrderDAO extends DAO implements OrderRepository {
 
 //Places a new order in database for a given username and their cart of products, each product has a quantity that the customer has ordered
 //and a total price is calculated for the order. Reduces quantity in stock.
-    public void placeOrder(String username, List<OrderProduct> orderedProducts) throws DataAccessException{
+    public void placeOrder(String username, List<OrderProduct> orderedProducts, String orderID) throws DataAccessException{
         String failureMsg = "Could not place order for " + username;
         String closeMessage = "Could not close result set for placing order";
         Connection connection = null;
         try{   
             connection = DBManager.getConnection();
-            String insertStatment = "INSERT INTO T_orders (customer_username) VALUES (?) RETURNING order_id";
+            String insertStatment = "INSERT INTO T_orders (customer_username, order_id) VALUES (?, ?)";
             PreparedStatement insertOrderStatement = connection.prepareStatement(insertStatment);
             insertOrderStatement.setString(1, username);
+            insertOrderStatement.setString(2, orderID);
             ResultSet rs = insertOrderStatement.executeQuery();
             if(!rs.next()){
                 handleException(connection, "Failed to create order", null);
             }
-            int orderId = rs.getInt("order_id");
+            
             closeResultSet(rs, closeMessage);
 
 
@@ -55,7 +56,7 @@ public class OrderDAO extends DAO implements OrderRepository {
                     handleException(connection, "Insufficient stock for product " + product.id(), null);
                 }
 
-                orderStatement.setInt(1, orderId);
+                orderStatement.setString(1, orderID);
                 orderStatement.setInt(2, product.id());
                 orderStatement.setInt(3, p.quantity());
                 orderStatement.setDouble(4, product.price());
@@ -66,7 +67,7 @@ public class OrderDAO extends DAO implements OrderRepository {
             PreparedStatement totalStmt =
             connection.prepareStatement("UPDATE T_orders SET total_price = ? WHERE order_id = ?");
             totalStmt.setDouble(1, totalPrice);
-            totalStmt.setInt(2, orderId);
+            totalStmt.setString(2, orderID);
             int updatedRows = totalStmt.executeUpdate();
             if(updatedRows == 0 ){
                 handleException(connection, failureMsg, null);
@@ -80,14 +81,14 @@ public class OrderDAO extends DAO implements OrderRepository {
     }
 
     //Employee packs given orderID
-    public void packOrder(String username, int orderID) throws DataAccessException {
+    public void packOrder(String username, String orderID) throws DataAccessException {
         Connection connection = null;
         try {
             connection = DBManager.getConnection();
             String sql ="UPDATE T_orders SET order_status = 'PACKED', packed_by = ?, packed_at = CURRENT_TIMESTAMP WHERE order_id = ? AND order_status = 'PENDING'";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
-            ps.setInt(2, orderID);
+            ps.setString(2, orderID);
             int updatedRows = ps.executeUpdate();
             if (updatedRows != 1) {
                handleException(connection, "Order " + orderID + " could not be packed.", null);

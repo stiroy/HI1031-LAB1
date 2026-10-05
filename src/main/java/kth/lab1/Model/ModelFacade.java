@@ -19,6 +19,7 @@ import kth.lab1.UI.DTO.CustomerOrderDTO;
 import kth.lab1.UI.DTO.OrderProductDTO;
 import kth.lab1.UI.DTO.ProductDTO;
 import kth.lab1.UI.DTO.UserDTO;
+import kth.lab1.UI.DTO.OrderDTO;
 /*
  * This is a entry point in to the Model layer
  * Hides all subsystem handlers from the UI layer
@@ -56,20 +57,37 @@ public class ModelFacade {
     }
  
     //Called when a customer places an order from shopping cart
-    public void placeOrder(UserDTO activeCustomerDTO, List<OrderProductDTO> shoppingCart) throws DataAccessException{
-        List<OrderProduct> orderedProducts = shoppingCart.stream()
-        .map(orderedProduct-> new OrderProduct(
-            new Product(orderedProduct.product().getId(), orderedProduct.product().getName(), 
-            orderedProduct.product().getDescription(), orderedProduct.product().getCategory(),
-            orderedProduct.product().getPrice(), orderedProduct.product().getQuantity()), 
-            orderedProduct.quantity())).toList();
-        String activeCustomerUsername = activeCustomerDTO.getUsername();
-        try {
-            orderHandler.placeOrder(activeCustomerUsername, orderedProducts);
-        } catch (DataAccessException e) {
-             throw new DataAccessException("Could not place order for customer with username: "+ activeCustomerUsername,e);
-        }
+public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
+
+    List<OrderProduct> orderedProducts =
+        shoppingCart.getItems().stream()
+            .map(item -> {
+                ProductDTO dto = item.getProduct();
+
+                Product product = new Product(
+                    dto.getId(),
+                    dto.getName(),
+                    dto.getDescription(),
+                    dto.getCategory(),
+                    dto.getPrice(),
+                    dto.getQuantity()
+                );
+
+                return new OrderProduct(
+                    product,
+                    item.getQuantity(),
+                    shoppingCart.getOrderId()
+                );
+            }).toList();
+
+    String activeCustomerUsername = shoppingCart.getCustomerName();
+    try {
+        orderHandler.placeOrder(activeCustomerUsername,orderedProducts);
+    } catch (DataAccessException e) {
+        throw new DataAccessException(
+            "Could not place order for customer with username: " + activeCustomerUsername, e);
     }
+}
 
     // ----------- ADMIN METHODS -------------------------------------
     //For admin to create Employees

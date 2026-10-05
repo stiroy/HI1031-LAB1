@@ -9,7 +9,7 @@ import kth.lab1.Model.records.OrderProduct;
 
 public interface OrderRepository {
 //customer
-    void placeOrder(String customerUsername, List<OrderProduct> orderedProducts) throws DataAccessException;
+    void placeOrder(String customerUsername, List<OrderProduct> orderedProducts, String orderID) throws DataAccessException;
 
 //employee
     void packOrder(String username, int orderID)throws DataAccessException;
