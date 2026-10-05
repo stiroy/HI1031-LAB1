@@ -3,6 +3,7 @@ package kth.lab1.UI.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import kth.lab1.Model.ModelFacade;
 import kth.lab1.UI.DTO.Cart;
 import kth.lab1.UI.DTO.ProductDTO;
 import kth.lab1.UI.DTO.OrderDTO;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class CartController {
+
+    ModelFacade modelFacade = new ModelFacade();
 
     private Cart getOrCreateCart(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
@@ -30,7 +33,7 @@ public class CartController {
         return "cart";
     }
 
-    public String handleAddToCart(HttpServletRequest request, HttpServletResponse response) {
+    public String handleAddToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String productIdParam = request.getParameter("productId");
         String quantityParam = request.getParameter("quantity");
 
@@ -42,13 +45,7 @@ public class CartController {
                                 ? Integer.parseInt(quantityParam.trim()) 
                                 : 1;
 
-                ProductController pc = new ProductController();
-                List<ProductDTO> products = pc.getSampleProducts();
-                
-                ProductDTO selected = products.stream()
-                    .filter(p -> p.getId() == productId)
-                    .findFirst()
-                    .orElse(null);
+                ProductDTO selected = modelFacade.getProductByID(productId);
 
                 if (selected != null) {
                     Cart cart = getOrCreateCart(request);
@@ -100,7 +97,7 @@ public class CartController {
     
         String customerName = request.getRemoteUser();
         if (customerName == null || customerName.isEmpty()) {
-            customerName = "Guest User";
+            return "redirect:/login"; // send to login
         }
     
         OrderDTO order = new OrderDTO(
