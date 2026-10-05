@@ -51,7 +51,7 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("/admin/adminCatalog", adminController::handleManageCatalog);
         actionRegistry.put("/admin/addProduct", adminController::handleAddProduct);
         actionRegistry.put("/admin/updateProduct", adminController::handleUpdateProduct);
-        actionRegistry.put("/admin/index", homeController::handleHome);
+        actionRegistry.put("/admin/index", adminController::handleAdminHome);
         // Employee
         actionRegistry.put("/employee/employeeOrders", employeeController::handleViewOrders);
         actionRegistry.put("/employee/packOrder", employeeController::handlePackOrder);

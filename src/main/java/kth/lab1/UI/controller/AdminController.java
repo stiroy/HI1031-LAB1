@@ -10,6 +10,7 @@ import kth.lab1.UI.DTO.ProductDTO;
 
 public class AdminController {
 
+
     private List<UserDTO> getUsers(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         List<UserDTO> users = (List<UserDTO>) session.getAttribute("mockUsers");
@@ -23,6 +24,14 @@ public class AdminController {
             session.setAttribute("mockUsers", users);
         }
         return users;
+    }
+
+    public String handleAdminHome(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("pageTitle", "Admin Control Center");
+        
+        // Pass metrics to WEB-INF/admin/index.jsp
+
+        return "admin/index"; // Resolves to /WEB-INF/admin/index.jsp
     }
 
     // List all users
@@ -47,7 +56,7 @@ public class AdminController {
             }
         } catch (Exception ignored) {}
 
-        return "redirect:/app/adminUsers";
+        return "redirect:/admin/adminUsers";
     }
 
     // Helper to get or initialize shared sample products in ServletContext
@@ -87,7 +96,7 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        return "redirect:/app/adminCatalog";
+        return "redirect:/admin/adminCatalog";
     }
 
     // Handle Edit Existing Product
@@ -115,6 +124,6 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        return "redirect:/app/adminCatalog";
+        return "redirect:/admin/adminCatalog";
     }
 }
