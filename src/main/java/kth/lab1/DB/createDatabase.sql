@@ -9,7 +9,23 @@ CREATE TABLE T_products (
     price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE T_products (
+    product_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL DEFAULT 'none',
+    category VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    price DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_product_category 
+        FOREIGN KEY (category) 
+        REFERENCES T_categories(category_name) 
+        ON UPDATE CASCADE
+);
 
+CREATE TABLE T_categories (
+    category_name PRIMARY KEY
+);
 
 -- USER and roles
 CREATE TABLE T_users (
@@ -48,8 +64,8 @@ CREATE TABLE T_user_roles (
 CREATE TABLE T_orders (
     order_id SERIAL PRIMARY KEY,
     customer_username VARCHAR(100) NOT NULL,
-    order_status VARCHAR(20) NOT NULL DEFAULT 'UNPACKED'
-        CHECK (order_status IN ('UNPACKED', 'PACKED')),
+    order_status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+        CHECK (order_status IN ('PENDING', 'PACKED')),
     total_price DECIMAL(10,2) DEFAULT 0,
     packed_by VARCHAR(100),
     packed_at TIMESTAMP WITH TIME ZONE,
