@@ -105,7 +105,7 @@
     </div>
 
     <div class="actions">
-        <a href="${pageContext.request.contextPath}/app/itemDetail?id=101" class="btn">Return to Catalog</a>
+        <a href="${pageContext.request.contextPath}/app/catalog" class="btn">Return to Catalog</a>
     </div>
 
     <!-- Dev/Debug Stack Trace Block (Injected by Servlet Container if uncaught) -->
