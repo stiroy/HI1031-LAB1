@@ -10,6 +10,7 @@ public record ProductDTO(
     int quantity
     ) {
         // Standard JavaBean getters for JSP EL resolution
+        public int getId() { return id; }
         public String getName() { return name; }
         public String getDescription() { return description; }
         public String getCategory() { return category; }

@@ -15,6 +15,3 @@
         </button>
     </div>
 </div>
-
-<!-- Footer -->
-<%@ include file="common/footer.jsp" %>

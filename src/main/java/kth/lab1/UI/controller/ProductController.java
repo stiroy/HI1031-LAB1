@@ -65,11 +65,11 @@ public class ProductController {
         return "catalog";
     }
     // dummy data for testing
-    private List<ProductDTO> getSampleProducts(){
+    public List<ProductDTO> getSampleProducts() {
         List<ProductDTO> list = new ArrayList<>();
         list.add(new ProductDTO(1, "Mechanical Keyboard", "RGB backlighting with linear switches", "Electronics", 129.99, 15));
         list.add(new ProductDTO(2, "Ergonomic Chair", "High-back mesh chair with lumbar support", "Furniture", 249.50, 4));
-        list.add(new ProductDTO(3, "Wireless Mouse", "Ultra-lightweight gaming mouse", "Electronics", 79.95, 0)); // Out of stock example
+        list.add(new ProductDTO(3, "Wireless Mouse", "Ultra-lightweight gaming mouse", "Electronics", 79.95, 0));
         list.add(new ProductDTO(4, "Coffee Mug", "Ceramic 350ml heat-insulated mug", "Kitchenware", 14.99, 42));
         return list;
     }

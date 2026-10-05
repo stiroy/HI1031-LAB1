@@ -11,6 +11,12 @@
         <div class="flex items-center space-x-6 text-sm font-medium">
             <a href="${pageContext.request.contextPath}/app/index" class="hover:text-teal-300 transition">Home</a>
             <a href="${pageContext.request.contextPath}/app/status" class="hover:text-teal-300 transition">Status</a>
+            <a href="${pageContext.request.contextPath}/app/cart" class="hover:text-teal-300 transition flex items-center space-x-1.5">
+                <span>🛒 Cart</span>
+                <span class="${not empty sessionScope.cart && sessionScope.cart.totalItemCount > 0 ? 'inline-block' : 'hidden'} text-[10px] bg-teal-400 text-slate-950 font-bold px-1.5 py-0.5 rounded-full">
+                    ${sessionScope.cart.totalItemCount}
+                </span>
+            </a>
 
             <!-- Session Navigation Check -->
             <% if (request.getRemoteUser() != null) { %>
