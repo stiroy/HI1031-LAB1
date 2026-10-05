@@ -4,8 +4,12 @@ import kth.lab1.Model.exceptions.DataAccessException;
 import kth.lab1.Model.interfaces.UserRepository;
 import kth.lab1.Model.records.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.SQLException;
 
 public class UserDAO extends DAO implements UserRepository{
@@ -14,8 +18,6 @@ public class UserDAO extends DAO implements UserRepository{
         String failureMsg = "Could not create new user: " + user.username();
         String createUserStatement = "INSERT INTO T_users(username, password_hash) VALUES (?, ?)";
         String assignRoleStatement = "INSERT INTO T_user_roles(username, role_name) VALUES (?, ?)";
-
-
         try (
         Connection connection = DBManager.getConnection();
 
@@ -29,11 +31,50 @@ public class UserDAO extends DAO implements UserRepository{
             roleStatement.setString(1, user.username());
             roleStatement.setString(2, user.role());
             int updatedRoleRows = roleStatement.executeUpdate();
-            
+
             if(updatedUserRows == 0 || updatedRoleRows == 0){
                 handleException(connection, failureMsg, null);
             }
         commit(connection);
         }catch(SQLException | DataAccessException e){throw new DataAccessException(failureMsg, e);}
+    }
+
+    public List<User> fetchUsers() throws DataAccessException{
+        List<User> fetchedUsers = new ArrayList<>();
+        String failureMsg = "Could not fetch users";
+        String fetchUserSQL = "SELECT u.username, ur.role_name FROM T_users u JOIN T_user_roles ur ON u.username = ur.username ORDER BY u.username";
+              try (
+                Connection connection = DBManager.getConnection();
+                Statement st = connection.createStatement();
+              ) {
+                try (
+                    ResultSet rs = st.executeQuery(fetchUserSQL);
+                ) {
+                    while (rs.next()) {
+                        fetchedUsers.add(new User(
+                            rs.getString("username"),
+                            rs.getString("role_name"),
+                            "")
+                        );
+                    }
+                }
+              } catch (SQLException e) {throw new DataAccessException(failureMsg, e);}
+              return fetchedUsers;
+    }      
+    public void changeRole(User user) throws DataAccessException{
+        String failureMsg = "Could not fetch users";
+        String changeRoleSQL = "UPDATE T_user_roles SET role_name = ? WHERE username = ?";
+        try(
+            Connection connection = DBManager.getConnection();
+            PreparedStatement ps = connection.prepareStatement(changeRoleSQL);
+        ){
+            ps.setString(1, user.role());
+            ps.setString(2, user.username());
+            int updatedRows = ps.executeUpdate();
+            if(updatedRows != 1){
+                handleException(connection, failureMsg, null);
+            }
+            commit(connection);
+        }catch(SQLException | DataAccessException e){throw new DataAccessException(failureMsg,e);}
     }
 }

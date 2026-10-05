@@ -93,7 +93,23 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
         } catch (DataAccessException e) {
             throw new DataAccessException("Could not create employee with username: "+ employee.getUsername(),e);
         }
- 
+    }
+
+    public List<UserDTO> fetchUsers() throws DataAccessException{
+        try{
+            List<User> users =  userHandler.fetchUsers();
+            List<UserDTO> userDTOs = users.stream().map(user -> new UserDTO(0 ,user.username(),"", user.role())).toList();
+         return userDTOs;
+        }catch(DataAccessException e){throw new DataAccessException("Could not fetch users",e);}
+    }
+
+    public void changeRole(UserDTO user) throws DataAccessException{
+        User changeUser = new User(user.getUsername(), user.getRole(), null);
+        try {
+            userHandler.changeUserRole(changeUser);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Could not create user with username: "+ user.getUsername(),e);
+        }
     }
 
     // ----------- EMPLOYEE METHODS -------------------------------------
@@ -171,7 +187,6 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
         return orders.stream().map(this::toOrderDTO).toList();
     }
 
-
     //Specific user lookup
     public List<OrderDTO> viewCustomerOrders(String customerUsername) throws DataAccessException {
         List<CustomerOrder> orders = orderHandler.viewCustomerOrders(customerUsername);
@@ -186,8 +201,8 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
              throw new DataAccessException("Failed to pack order with id: "+orderID,e);
         }
     }
-    private OrderDTO toOrderDTO(CustomerOrder order) {
 
+    private OrderDTO toOrderDTO(CustomerOrder order) {
     List<CartProductDTO> items = order.items().stream().map(op -> new CartProductDTO(new ProductDTO(
                                     op.product().id(),
                                     op.product().name(),
