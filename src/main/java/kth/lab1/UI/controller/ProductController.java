@@ -43,8 +43,8 @@ public class ProductController {
 
 
     public String handleCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        //List<ProductDTO> products = Handler.getProducts();
-        List<ProductDTO> products = getSampleProducts();  
+        List<ProductDTO> products = Handler.getProducts();
+        //List<ProductDTO> products = getSampleProducts();  
         
         // Programmatic search filtering (fallback until DB is operational)
         String searchQuery = request.getParameter("query");

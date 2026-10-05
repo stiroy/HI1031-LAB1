@@ -79,14 +79,15 @@ public class ModelFacade {
             userHandler.createEmployee(newEmployee);
         } catch (DataAccessException e) {
             throw new DataAccessException("Could not create employee with username: "+ employee.username(),e);
-        }*/
-/* 
-    }
+        }
+
+    }*/
 
     // ----------- EMPLOYEE METHODS -------------------------------------
 
     //Enables search by id 
     // REPLACE PLACEHOLDER INFORMATION
+    /*
     public ProductDTO getProductByID(int id) throws DataAccessException {
         try {
             Product product = productHandler.searchProductByID(id);
@@ -97,7 +98,7 @@ public class ModelFacade {
         } catch (DataAccessException e) {
             throw new DataAccessException("Failed to get product with id: " + id, e);
         }
-    }
+    }*/
 
     // Get Products
     public List<ProductDTO> getProducts() throws DataAccessException {
@@ -111,7 +112,7 @@ public class ModelFacade {
             throw new DataAccessException("Failed to retrieve products", e);
         }
     }
-
+    /* 
     //Adds product to database
     public void addProduct(ProductDTO productDTO) throws DataAccessException{
         Product product = new Product(-1, productDTO.name(), productDTO.description(), productDTO.category(), productDTO.price(), productDTO.quantity());
