@@ -50,7 +50,7 @@
                             </span>
 
                             <!-- Pack Order Action Form -->
-                            <form action="${pageContext.request.contextPath}/app/packOrder" method="POST" class="m-0">
+                            <form action="${pageContext.request.contextPath}/employee/packOrder" method="POST" class="m-0">
                                 <input type="hidden" name="orderId" value="${order.orderId}" />
                                 <button type="submit" ${order.status == 'PACKED' ? 'disabled' : ''} 
                                         class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${order.status != 'PACKED' ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}">

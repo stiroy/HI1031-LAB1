@@ -70,6 +70,6 @@ public class EmployeeController {
             }*/
         //}
 
-        return "redirect:/app/employeeOrders";
+        return "redirect:/employee/employeeOrders";
     }
 }
