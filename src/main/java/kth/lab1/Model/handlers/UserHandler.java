@@ -1,6 +1,7 @@
 package kth.lab1.Model.handlers;
 
 import kth.lab1.Model.exceptions.DataAccessException;
+import kth.lab1.Model.exceptions.NotFoundException;
 import kth.lab1.Model.interfaces.UserRepository;
 import kth.lab1.Model.records.User;
 import java.util.List;
@@ -14,17 +15,24 @@ public class UserHandler {
     public void createCustomer(User customer) throws DataAccessException{
         users.createUser(customer);
     }
-    //Admin creates employee
+    /**
+     * Marks an order as packed by the specified employee.
+     *
+     * <p>Business rules:
+     * <ul>
+     *   <li>Product must exist.</li>
+     * </ul>
+     *
+     * @param productName Name of product to be searched.
+     * @throws NotFoundException If no product is found. 
+     * @throws DataAccessException If the database operation fails.
+     */   
     public void createEmployee(User employee) throws DataAccessException{
         users.createUser(employee);
     }
     public void changeUserRole(User user) throws DataAccessException {
-        if (user.role().equals("ADMIN") || user.role().equals("CUSTOMER")
-                                                || user.role().equals("EMPLOYEE")) {
             users.changeRole(user);
-        } else {
-            throw new IllegalArgumentException("Invalid role: " + user.role());
-        }
+
     }
     public List<User> fetchUsers() throws DataAccessException{
         return users.fetchUsers();

@@ -15,10 +15,7 @@ import kth.lab1.Model.records.OrderProduct;
 import kth.lab1.Model.records.Product;
 
 public class OrderDAO extends DAO implements OrderRepository {
-
-//Places a new order in database for a given username and their cart of products, each product has a quantity that the customer has ordered
-//and a total price is calculated for the order. Reduces quantity in stock.
-        @Override 
+         @Override 
     public void placeOrder(String username, List<OrderProduct> orderedProducts, String orderID) throws DataAccessException{
         String failureMsg = "Could not place order for " + username;
         String insertIDSQL = "INSERT INTO T_orders (customer_username, order_id) VALUES (?, ?)";
@@ -75,7 +72,8 @@ public class OrderDAO extends DAO implements OrderRepository {
         }catch(SQLException | IllegalArgumentException e){throw new DataAccessException("Failed to place order: "+orderID,e);}
     }
 
-    //Employee packs given orderID
+
+
         @Override 
     public void packOrder(String employeeUsername, String orderID) throws DataAccessException {
          String sql =
