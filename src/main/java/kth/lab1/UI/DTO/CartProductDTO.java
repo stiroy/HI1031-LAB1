@@ -2,7 +2,7 @@ package kth.lab1.UI.DTO;
 
 public record CartProductDTO(ProductDTO product, int quantity) {
     public double getTotalPrice() {
-        return product.price() * quantity;
+        return product.getPrice() * quantity;
     }
     
     // JavaBean getters for JSP EL

@@ -25,8 +25,8 @@ public class ProductController {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
-        ProductDTO product = Handler.getProductByID(itemId);
-        request.setAttribute("product", product);
+        //ProductDTO product = Handler.getProductByID(itemId);
+        //request.setAttribute("product", product);
 
        return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
     }
@@ -51,9 +51,9 @@ public class ProductController {
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             String q = searchQuery.trim().toLowerCase();
             products = products.stream()
-                .filter(p -> p.name().toLowerCase().contains(q) ||
-                             p.category().toLowerCase().contains(q) ||
-                             p.description().toLowerCase().contains(q))
+                .filter(p -> p.getName().toLowerCase().contains(q) ||
+                             p.getCategory().toLowerCase().contains(q) ||
+                             p.getDescription().toLowerCase().contains(q))
                 .collect(Collectors.toList());
             
             request.setAttribute("searchQuery", searchQuery.trim());

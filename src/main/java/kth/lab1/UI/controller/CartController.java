@@ -46,7 +46,7 @@ public class CartController {
                 List<ProductDTO> products = pc.getSampleProducts();
                 
                 ProductDTO selected = products.stream()
-                    .filter(p -> p.id() == productId)
+                    .filter(p -> p.getId() == productId)
                     .findFirst()
                     .orElse(null);
 
@@ -108,7 +108,8 @@ public class CartController {
             customerName,
             new ArrayList<>(cart.getItems()), // snapshot copy
             cart.getTotalAmount(),
-            LocalDateTime.now()
+            LocalDateTime.now(),
+            "PENDING"
         );
     
         //TODO: SAVES IN SESSION ORDER CAUSE DB IS NOT WORKING
@@ -119,6 +120,14 @@ public class CartController {
         }
         orderHistory.add(0, order); // Add newest orders to the top
         session.setAttribute("orderHistory", orderHistory);
+
+        //TODO: saves order to shared global Queue
+        List<OrderDTO> globalOrders = (List<OrderDTO>) session.getServletContext().getAttribute("globalOrders");
+        if (globalOrders == null) {
+            globalOrders = new java.util.ArrayList<>();
+        }
+        globalOrders.add(0, order);
+        session.getServletContext().setAttribute("globalOrders", globalOrders);
 
         request.setAttribute("completedOrder", order);
         request.setAttribute("pageTitle", "Order Confirmation");

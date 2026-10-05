@@ -40,6 +40,13 @@
                                 <span class="text-slate-700">${order.orderDate}</span>
                             </div>
                         </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-mono">Status</span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold font-mono border ${order.status == 'PACKED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}">
+                                <span class="w-1.5 h-1.5 rounded-full mr-1.5 ${order.status == 'PACKED' ? 'bg-emerald-500' : 'bg-amber-500'}"></span>
+                                ${order.status == 'PACKED' ? 'Packed' : 'Processing'}
+                            </span>
+                        </div>
 
                         <div class="text-right">
                             <span class="text-slate-400 block text-[10px] uppercase">Total</span>
@@ -59,7 +66,6 @@
                             </div>
                         </t:forEach>
                     </div>
-
                 </div>
             </t:forEach>
         </div>

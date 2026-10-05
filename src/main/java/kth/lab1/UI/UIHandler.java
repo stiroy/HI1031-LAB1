@@ -14,7 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import kth.lab1.UI.controller.ProductController;
 import kth.lab1.UI.controller.StatusController;
 import kth.lab1.UI.controller.UserController;
+import kth.lab1.UI.controller.AdminController;
 import kth.lab1.UI.controller.CartController;
+import kth.lab1.UI.controller.EmployeeController;
 import kth.lab1.UI.controller.HomeController;
 import kth.lab1.UI.controller.SessionController;
 
@@ -28,6 +30,8 @@ public class UIHandler extends HttpServlet {
         private final SessionController sessionController = new SessionController();
         private final UserController userController = new UserController();
         private final CartController cartController = new CartController();
+        private final EmployeeController employeeController = new EmployeeController();
+        private final AdminController adminController = new AdminController();
 
         @Override
         public void init() throws ServletException {
@@ -41,6 +45,15 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("logout", sessionController::handleLogout);
         actionRegistry.put("userProfile", userController::handleProfile);
         actionRegistry.put("orders", userController::handleOrderHistory);
+        // --- Admin Routes ---
+        actionRegistry.put("adminUsers", adminController::handleListUsers);
+        actionRegistry.put("updateUserRole", adminController::handleUpdateUserRole);
+        actionRegistry.put("adminCatalog", adminController::handleManageCatalog);
+        actionRegistry.put("addProduct", adminController::handleAddProduct);
+        actionRegistry.put("updateProduct", adminController::handleUpdateProduct);
+        // Employee
+        actionRegistry.put("employeeOrders", employeeController::handleViewOrders);
+        actionRegistry.put("packOrder", employeeController::handlePackOrder);
         // catalog fuctions
         actionRegistry.put("itemDetail", productController::handleDetail);
         actionRegistry.put("catalog", productController::handleCatalog);

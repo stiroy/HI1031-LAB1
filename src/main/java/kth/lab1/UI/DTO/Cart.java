@@ -10,13 +10,13 @@ public class Cart {
     public void addProduct(ProductDTO product, int qty) {
         for (int i = 0; i < items.size(); i++) {
             CartProductDTO current = items.get(i);
-            if (current.product().id() == product.id()) {
-                int newQty = Math.min(current.quantity() + qty, product.quantity());
+            if (current.product().getId() == product.getId()) {
+                int newQty = Math.min(current.getQuantity() + qty, product.getQuantity());
                 items.set(i, new CartProductDTO(product, newQty));
                 return;
             }
         }
-        items.add(new CartProductDTO(product, Math.min(qty, product.quantity())));
+        items.add(new CartProductDTO(product, Math.min(qty, product.getQuantity())));
     }
 
     public void updateQuantity(int productId, int qty) {
@@ -26,15 +26,15 @@ public class Cart {
         }
         for (int i = 0; i < items.size(); i++) {
             CartProductDTO current = items.get(i);
-            if (current.product().id() == productId) {
-                items.set(i, new CartProductDTO(current.product(), Math.min(qty, current.product().quantity())));
+            if (current.product().getId() == productId) {
+                items.set(i, new CartProductDTO(current.product(), Math.min(qty, current.product().getQuantity())));
                 return;
             }
         }
     }
 
     public void removeItem(int productId) {
-        items.removeIf(item -> item.product().id() == productId);
+        items.removeIf(item -> item.product().getId() == productId);
     }
 
     public void clear() {
