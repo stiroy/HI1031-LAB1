@@ -109,22 +109,6 @@ public class CartController {
             "PENDING"
         );
         Handler.placeOrder(order);
-        //TODO: SAVES IN SESSION ORDER CAUSE DB IS NOT WORKING
-        //HttpSession session = request.getSession(true);
-        //List<OrderDTO> orderHistory = (List<OrderDTO>) session.getAttribute("orderHistory");
-        //if (orderHistory == null) {
-        //    orderHistory = new ArrayList<>();
-        //}
-        //orderHistory.add(0, order); // Add newest orders to the top
-        //session.setAttribute("orderHistory", orderHistory);
-
-        //TODO: saves order to shared global Queue
-        //List<OrderDTO> globalOrders = (List<OrderDTO>) session.getServletContext().getAttribute("globalOrders");
-        //if (globalOrders == null) {
-        //    globalOrders = new java.util.ArrayList<>();
-        //}
-        //globalOrders.add(0, order);
-        //session.getServletContext().setAttribute("globalOrders", globalOrders);
 
         request.setAttribute("completedOrder", order);
         request.setAttribute("pageTitle", "Order Confirmation");
