@@ -1,28 +1,46 @@
 package kth.lab1.DB;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// Holds a connection to the database.
-public class DBManager {
-    private Connection connection;
-    private static DBManager instance = null;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
-    private static DBManager getInstance() throws ClassNotFoundException, SQLException {
-        if (instance == null) {
-            instance = new DBManager();
-        }
-        return instance;
+public final class DBManager {
+
+    private static final HikariDataSource dataSource;
+
+    static {
+        HikariConfig config = new HikariConfig();
+
+        config.setJdbcUrl(
+            "jdbc:postgresql://10.89.0.2:5432/milkyway");
+
+        config.setUsername("sol");
+        config.setPassword("terra");
+
+        config.setDriverClassName(
+            "org.postgresql.Driver");
+
+        // Pool settings
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(2);
+        config.setAutoCommit(false);
+
+        config.setPoolName("MilkyWayPool");
+
+        dataSource = new HikariDataSource(config);
     }
 
-    private DBManager() throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
-        connection = DriverManager.getConnection("jdbc:postgresql://10.89.0.2:5432/milkyway", "sol", "terra");
-        connection.setAutoCommit(false);
+    private DBManager() {}
+
+    public static Connection getConnection()
+            throws SQLException {
+
+        return dataSource.getConnection();
     }
 
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        return getInstance().connection;
+    public static void shutdown() {
+        dataSource.close();
     }
 }
