@@ -87,7 +87,7 @@ public class CartController {
         return "redirect:/app/cart";
     }
 
-    public String handleCheckout(HttpServletRequest request, HttpServletResponse response) {
+    public String handleCheckout(HttpServletRequest request, HttpServletResponse response) throws Exception{
         Cart cart = getOrCreateCart(request);
     
         // If cart is empty, redirect back to index
