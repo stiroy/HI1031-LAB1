@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors; // ONLY TEMPORARY
 
 public class ProductController {
 
@@ -32,37 +31,39 @@ public class ProductController {
     }
 
     public String handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String query = request.getParameter("q");
-        if (query == null || query.isBlank()) {
-            throw new IllegalArgumentException("Search query 'q' cannot be empty.");
-        }
-        
-        request.setAttribute("searchResults", Handler.getProductByName(query));
-        return "searchResults";
+            String query = request.getParameter("q");
+            if (query == null || query.isBlank()) {
+                request.setAttribute("searchQuery", "");
+                return "searchResults";
+            }
+            
+            String trimmedQuery = query.trim();
+            // Execute SQL search directly via DB Handler
+            List<ProductDTO> results = Handler.getProductByName(trimmedQuery);
+            
+            request.setAttribute("searchResults", results);
+            request.setAttribute("searchQuery", trimmedQuery);
+            return "searchResults";
     }
 
 
     public String handleCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<ProductDTO> products = Handler.getProducts();
-        //List<ProductDTO> products = getSampleProducts();  
-        
-        // Programmatic search filtering (fallback until DB is operational)
         String searchQuery = request.getParameter("query");
-        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            String q = searchQuery.trim().toLowerCase();
-            products = products.stream()
-                .filter(p -> p.getName().toLowerCase().contains(q) ||
-                             p.getCategory().toLowerCase().contains(q) ||
-                             p.getDescription().toLowerCase().contains(q))
-                .collect(Collectors.toList());
-            
-            request.setAttribute("searchQuery", searchQuery.trim());
-        }
-
-        request.setAttribute("products", products);
-        request.setAttribute("pageTitle", "Product Catalog");
+            List<ProductDTO> products;
         
-        return "catalog";
+            // Direct DB Delegation: Search DB if query exists, otherwise pull full catalog
+            if (searchQuery != null && !searchQuery.isBlank()) {
+                String q = searchQuery.trim();
+                products = Handler.getProductByName(q);
+                request.setAttribute("searchQuery", q);
+            } else {
+                products = Handler.getProducts();
+            }
+        
+            request.setAttribute("products", products);
+            request.setAttribute("pageTitle", "Product Catalog");
+            
+            return "catalog";
     }
     // dummy data for testing
     public List<ProductDTO> getSampleProducts() {
