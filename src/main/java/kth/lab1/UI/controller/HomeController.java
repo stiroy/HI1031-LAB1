@@ -6,14 +6,16 @@ import jakarta.servlet.http.HttpSession;
 
 public class HomeController {
 
-    public String handleHome(HttpServletRequest req, HttpServletResponse resp) {
+    public String handleHome(HttpServletRequest request, HttpServletResponse response) {
         // Retrieve current logged-in user if session exists
-        HttpSession session = req.getSession(false);
-        String currentUser = (session != null && session.getAttribute("user") != null) 
-                             ? (String) session.getAttribute("user") 
-                             : "Guest";
+        if (request.isUserInRole("ADMIN")) {
+            return "redirect:/admin/index";
+        } else if (request.isUserInRole("EMPLOYEE")) {
+            return "redirect:/Employee/index";
+        } else {
+            // Defaults to CUSTOMER or unauthenticated guest view
+            return "redirect:/app/index";
+        }
 
-        req.setAttribute("currentUser", currentUser);
-        return "index"; 
     }
 }
