@@ -33,13 +33,21 @@ public class AdminController {
     // Update user role
     public String handleUpdateUserRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            String newRole = request.getParameter("role");
+        String userIdParam = request.getParameter("userId");
+        String newRole = request.getParameter("role");
 
-            //TODO
-            modelFacade.changeRole(null);
-        } catch (Exception ignored) {}
-
+        if (userIdParam != null && !userIdParam.trim().isEmpty() && newRole != null && !newRole.trim().isEmpty()) {
+            int userId = Integer.parseInt(userIdParam.trim());
+            
+            // Construct DTO with target ID and updated role
+            UserDTO userToUpdate = new UserDTO(userId, null, null, newRole.trim());
+            
+            // Pass populated DTO to facade to update T_user_roles in PostgreSQL
+            modelFacade.changeRole(userToUpdate);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "redirect:/admin/adminUsers";
     }
 
