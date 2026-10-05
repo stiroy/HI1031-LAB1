@@ -20,7 +20,7 @@ import kth.lab1.UI.controller.EmployeeController;
 import kth.lab1.UI.controller.HomeController;
 import kth.lab1.UI.controller.SessionController;
 
-@WebServlet("/app/*")
+@WebServlet(urlPatterns = {"/app/*", "/employee/*", "/admin/*"})
 public class UIHandler extends HttpServlet {
 
         private final Map<String, ViewAction> actionRegistry = new HashMap<>();
@@ -82,37 +82,55 @@ public class UIHandler extends HttpServlet {
             throws ServletException, IOException {
             
         String pathInfo = request.getPathInfo();
-        String actionName = (pathInfo != null && pathInfo.length() > 1) ? pathInfo.substring(1) : "index";
+        String actionName = (pathInfo != null && pathInfo.length() > 1) 
+                            ? pathInfo.substring(1) 
+                            : "index";
 
         ViewAction action = actionRegistry.get(actionName);
 
-        // If route doesn't exist in registry, attempt direct JSP forward
+        // If route doesn't exist in registry, fall back to resolve JSP dynamically
         if (action == null) {
-            request.getRequestDispatcher("/WEB-INF/views/" + actionName + ".jsp").forward(request, response);
+            forwardToJsp(request, response, actionName);
             return;
         }
 
         try {
             String viewName = action.execute(request, response);
-        
-            // Skip forwarding if controller already issued a response.sendRedirect()
             if (viewName == null || response.isCommitted()) {
                 return;
             }
 
-            // Handle string-based redirects like "redirect:/app/index"
             if (viewName.startsWith("redirect:")) {
                 String redirectTarget = viewName.substring("redirect:".length());
                 response.sendRedirect(request.getContextPath() + redirectTarget);
                 return;
             }
 
-            // Standard view rendering
-            request.getRequestDispatcher("/WEB-INF/views/" + viewName + ".jsp").forward(request, response);
+            // Forward to resolved view JSP
+            forwardToJsp(request, response, viewName);
 
         } catch (Exception e) {
+            e.printStackTrace();
             request.setAttribute("errorMessage", "An internal error occurred: " + e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
+    }
+    /**
+     * Resolves subfolders dynamically based on view name prefix:
+     * - "admin/index"       -> /WEB-INF/admin/index.jsp
+     * - "employee/orders"  -> /WEB-INF/employee/orders.jsp
+     * - "catalog"           -> /WEB-INF/views/catalog.jsp
+     */
+    private void forwardToJsp(HttpServletRequest request, HttpServletResponse response, String viewName) 
+            throws ServletException, IOException {
+
+        String jspPath;
+        if (viewName.startsWith("admin/") || viewName.startsWith("employee/")) {
+            jspPath = "/WEB-INF/" + viewName + ".jsp";
+        } else {
+            jspPath = "/WEB-INF/views/" + viewName + ".jsp";
+        }
+
+        request.getRequestDispatcher(jspPath).forward(request, response);
     }
 }
