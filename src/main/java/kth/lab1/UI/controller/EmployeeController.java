@@ -33,43 +33,6 @@ public class EmployeeController {
             }
         }
 
-        //if (orderId != null && !orderId.trim().isEmpty()) {
-            // 1. Update status in Global Warehouse Queue
-            /*@SuppressWarnings("unchecked")
-            List<OrderDTO> globalOrders = (List<OrderDTO>) request.getServletContext().getAttribute("globalOrders");
-
-            if (globalOrders != null) {
-                for (int i = 0; i < globalOrders.size(); i++) {
-                    OrderDTO existing = globalOrders.get(i);
-                    if (existing.getOrderId().equals(orderId)) {
-                        OrderDTO packedOrder = new OrderDTO(
-                            existing.getOrderId(),
-                            existing.getCustomerName(),
-                            existing.getItems(),
-                            existing.getTotalAmount(),
-                            existing.orderDate(),
-                            "PACKED"
-                        );
-                        
-                        // Replace in global list
-                        globalOrders.set(i, packedOrder);
-
-                        // 2. Also update in the user's active session order history if present
-                        List<OrderDTO> userOrders = (List<OrderDTO>) request.getSession().getAttribute("orderHistory");
-                        if (userOrders != null) {
-                            for (int j = 0; j < userOrders.size(); j++) {
-                                if (userOrders.get(j).getOrderId().equals(orderId)) {
-                                    userOrders.set(j, packedOrder);
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }*/
-        //}
-
         return "redirect:/employee/employeeOrders";
     }
 }
