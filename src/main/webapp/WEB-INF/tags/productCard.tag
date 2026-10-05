@@ -11,8 +11,6 @@
     <div>
         <!-- Category & Stock Status -->
         <div class="flex items-center justify-between mb-2">
-            <!-- DEBUG -->
-            <span>${id}</span> 
             <span class="text-[10px] font-bold uppercase tracking-wider text-teal-600 bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
                 ${category}
             </span>
