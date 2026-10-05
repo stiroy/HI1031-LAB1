@@ -11,17 +11,17 @@ import java.sql.SQLException;
 public class UserDAO extends DAO implements UserRepository{
 
     public void createUser(User user) throws DataAccessException{
-        String failureMsg = "Could not insert new user: " + user.username();
+        String failureMsg = "Could not create new user: " + user.username();
         String createUserStatement = "INSERT INTO T_users(username, password_hash) VALUES (?, ?)";
         String assignRoleStatement = "INSERT INTO T_user_roles(username, role_name) VALUES (?, ?)";
 
-        Connection connection = null;
-        try{   
-        connection = DBManager.getConnection();
+
+        try (
+        Connection connection = DBManager.getConnection();
 
         PreparedStatement userStatement = connection.prepareStatement(createUserStatement);
         PreparedStatement roleStatement = connection.prepareStatement(assignRoleStatement);
-
+        ) {
             userStatement.setString(1, user.username());
             userStatement.setString(2, user.password());
             int updatedUserRows = userStatement.executeUpdate();
@@ -29,16 +29,11 @@ public class UserDAO extends DAO implements UserRepository{
             roleStatement.setString(1, user.username());
             roleStatement.setString(2, user.role());
             int updatedRoleRows = roleStatement.executeUpdate();
-
-        if(updatedUserRows == 0 || updatedRoleRows == 0){
-            userStatement.close();
-            roleStatement.close();
-            handleException(connection, failureMsg, null);
-        }
+            
+            if(updatedUserRows == 0 || updatedRoleRows == 0){
+                handleException(connection, failureMsg, null);
+            }
         commit(connection);
-        userStatement.close();
-        roleStatement.close();
-        connection.close();
-        }catch(SQLException e){handleException(connection, failureMsg, e);}
+        }catch(SQLException | DataAccessException e){throw new DataAccessException(failureMsg, e);}
     }
 }

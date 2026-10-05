@@ -15,10 +15,10 @@ import kth.lab1.Model.records.OrderProduct;
 import kth.lab1.Model.records.Product;
 import kth.lab1.Model.records.User;
 
-import kth.lab1.UI.DTO.CustomerOrderDTO;
-import kth.lab1.UI.DTO.OrderProductDTO;
+
 import kth.lab1.UI.DTO.ProductDTO;
 import kth.lab1.UI.DTO.UserDTO;
+import kth.lab1.UI.DTO.CartProductDTO;
 import kth.lab1.UI.DTO.OrderDTO;
 /*
  * This is a entry point in to the Model layer
@@ -81,12 +81,7 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
             }).toList();
 
     String activeCustomerUsername = shoppingCart.getCustomerName();
-    try {
         orderHandler.placeOrder(activeCustomerUsername,orderedProducts);
-    } catch (DataAccessException e) {
-        throw new DataAccessException(
-            "Could not place order for customer with username: " + activeCustomerUsername +" order size: "+ orderedProducts.size(), e);
-    }
 }
 
     // ----------- ADMIN METHODS -------------------------------------
@@ -171,17 +166,16 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
     }
 
     //Initial listing of all customer orders for employees to browse
-    public List<CustomerOrderDTO> viewAllCustomerOrders() throws DataAccessException{
-         List<CustomerOrder> allCustomerOrders = orderHandler.viewAllOrders();
-            return allCustomerOrders.stream().map(co -> new CustomerOrderDTO(co.order_id(), co.customerUsername(),
-             co.productName(), co.quantity(), co.unit_price(), co.orderStatus(), co.totalPrice())).toList();
+    public List<OrderDTO> viewAllCustomerOrders() throws DataAccessException {
+        List<CustomerOrder> orders = orderHandler.viewAllOrders();
+        return orders.stream().map(this::toOrderDTO).toList();
     }
 
+
     //Specific user lookup
-    public List<CustomerOrderDTO> viewCustomerOrders(String customerUsername) throws DataAccessException{
-         List<CustomerOrder> allCustomerOrders = orderHandler.viewCustomerOrders(customerUsername);
-            return allCustomerOrders.stream().map(co -> new CustomerOrderDTO(co.order_id(), co.customerUsername(),
-             co.productName(), co.quantity(), co.unit_price(), co.orderStatus(), co.totalPrice())).toList();
+    public List<OrderDTO> viewCustomerOrders(String customerUsername) throws DataAccessException {
+        List<CustomerOrder> orders = orderHandler.viewCustomerOrders(customerUsername);
+        return orders.stream().map(this::toOrderDTO).toList();
     }
 
     public void packOrder(UserDTO activeEmployee, String orderID) throws DataAccessException{
@@ -192,7 +186,27 @@ public void placeOrder(OrderDTO shoppingCart) throws DataAccessException {
              throw new DataAccessException("Failed to pack order with id: "+orderID,e);
         }
     }
+    private OrderDTO toOrderDTO(CustomerOrder order) {
 
+    List<CartProductDTO> items = order.items().stream().map(op -> new CartProductDTO(new ProductDTO(
+                                    op.product().id(),
+                                    op.product().name(),
+                                    op.product().description(),
+                                    op.product().category(),
+                                    op.product().price(),
+                                    op.product().stockQuantity()
+                            ),
+                            op.quantity()
+                    )).toList();
+    return new OrderDTO(
+            order.order_id(),
+            order.customerUsername(),
+            items,
+            order.totalPrice(),
+            order.orderDate(),
+            order.orderStatus()
+        );
+    }
 
 }
 

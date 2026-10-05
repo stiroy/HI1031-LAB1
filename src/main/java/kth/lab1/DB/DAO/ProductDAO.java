@@ -33,120 +33,110 @@ private Product mapProduct(ResultSet rs)throws SQLException {
 }
 
     //Retrieves all products in product table, could be used to present product catalog
-   
+        @Override 
     public List<Product> retrieveProducts() throws DataAccessException{
         List<Product> retrievedProducts = new ArrayList<>();
-        String closeMessage = "Could not close result set for all product fetch";
-        try {
+        String retrieveQuery = "SELECT * FROM T_products ORDER BY T_products.name ASC";
+        try (
             Connection connection = DBManager.getConnection();
             Statement st = connection.createStatement();
-            ResultSet retrieveSet = st.executeQuery("SELECT * FROM T_products ORDER BY T_products.name ASC");
-            while (retrieveSet.next()){
-                retrievedProducts.add(mapProduct(retrieveSet));
+        ){
+            try (ResultSet retrieveSet = st.executeQuery(retrieveQuery);) {
+                while (retrieveSet.next()){
+                    retrievedProducts.add(mapProduct(retrieveSet));
             }
-            closeResultSet(retrieveSet, closeMessage);   
-            st.close();
-            connection.close();         
-        } catch(SQLException | DataAccessException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
+            }     
+        } catch(SQLException e ){throw new DataAccessException("Fetch all products query failed: ", e);}
         return retrievedProducts;
     }
 
     //Searches Product table for product's name, supports productsearch by either customer or employee, not case sensitive
+        @Override
     public List<Product> searchByName(String productName) throws DataAccessException {
         List<Product> searchProductResult = new ArrayList<>();
-        String closeMessage = "Could not close result set for search product fetch";
-
-        try{
+        String searchProductQuery = "SELECT * FROM T_products WHERE name ILIKE ?";        
+        try(
             Connection connection = DBManager.getConnection();
-            String searchProductQuery = "SELECT * FROM T_products WHERE name ILIKE ?";
-            PreparedStatement ps = connection.prepareStatement(searchProductQuery);
-            ps.setString(1,"%"+ productName + "%");
-            ResultSet searchResultSet = ps.executeQuery();
 
-            while (searchResultSet.next()){
-                searchProductResult.add(mapProduct(searchResultSet));
+            PreparedStatement ps = connection.prepareStatement(searchProductQuery);
+            ){
+            ps.setString(1,"%"+ productName + "%");
+            try (ResultSet searchResultSet = ps.executeQuery();) {
+                while (searchResultSet.next()){
+                    searchProductResult.add(mapProduct(searchResultSet));
+                }
             }
-            closeResultSet(searchResultSet, closeMessage);
-            ps.close();
-            connection.close();
-        }catch(SQLException | DataAccessException e ){throw new DataAccessException("Search by name query failed: ", e);}
+        }catch(SQLException e ){throw new DataAccessException("Search by name query failed: ", e);}
         return searchProductResult;
     }
 
-    public Optional<Product> searchByID(int productID) throws DataAccessException{
-        String closeMessage = "Could not close result set for search product fetch";
-
-        try{
+    @Override
+public Optional<Product> searchByID(int productID) throws DataAccessException {
+    String sql ="SELECT * FROM T_products WHERE product_id = ?";
+        try (
             Connection connection = DBManager.getConnection();
-            String searchProductQuery = "SELECT * FROM T_products WHERE product_id = ?";
-            PreparedStatement ps = connection.prepareStatement(searchProductQuery);
+
+            PreparedStatement ps = connection.prepareStatement(sql)
+            ) {
             ps.setInt(1, productID);
-            ResultSet searchResultSet = ps.executeQuery();
-            if(searchResultSet.next()){
-                Product product = mapProduct(searchResultSet);
-            closeResultSet(searchResultSet, closeMessage);
-            ps.close();
-            connection.close();
-            return Optional.of(product);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapProduct(rs));
+                }
+                return Optional.empty();
             }
-        closeResultSet(searchResultSet, closeMessage);
-        ps.close();
-        connection.close();
-        return Optional.empty();
-        }catch(SQLException | DataAccessException e ){throw new DataAccessException("Search product by ID query failed: ", e);}
+        } catch (SQLException e) { throw new DataAccessException("Search product by ID query failed", e);}
     }
     //Insert Info about product name, description, category and quantity, price product id is created upon insert by database, for employee use only
+        @Override
     public void addProduct(Product product) throws DataAccessException {
         String failureMsg = "Could not insert new product " + product.name();
-        Connection connection = null;
-        try{   
-        connection = DBManager.getConnection();
         String createProductStatement = "INSERT INTO T_products(name, description, category, quantity, price) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement ps = connection.prepareStatement(createProductStatement);
+        try (
+            Connection connection = DBManager.getConnection();
+
+            PreparedStatement ps = connection.prepareStatement(createProductStatement);
+        ) {
             ps.setString(1, product.name());
             ps.setString(2, product.description());
             ps.setString(3, product.category());
             ps.setInt(4, product.stockQuantity());
             ps.setDouble(5, product.price());
 
-        int updatedRows = ps.executeUpdate();
-        if(updatedRows == 0){
-            handleException(connection, failureMsg, null);
-        }
-        commit(connection);
-        ps.close();
-        connection.close();
-        }catch(SQLException  e){handleException(connection, failureMsg, e);}
+            int updatedRows = ps.executeUpdate();
+            if(updatedRows != 1){
+                handleException(connection, failureMsg, null);
+            }
+            commit(connection);
+        } catch(SQLException | DataAccessException e){throw new DataAccessException("Failed to add item "+product.name(),e);}
     }
-
+        @Override
     public void removeProduct(int productID) throws DataAccessException{
         String failureMsg = "Could not remove product " + productID;
-        Connection connection = null;
-
-        try{   
-        connection = DBManager.getConnection();
         String removeProductStatement = "DELETE FROM T_products WHERE product_id = ?";
-        PreparedStatement ps = connection.prepareStatement(removeProductStatement);
+        try (
+            Connection connection = DBManager.getConnection();
+            PreparedStatement ps = connection.prepareStatement(removeProductStatement);
+        ) {
             ps.setInt(1, productID);
-        int updatedRows = ps.executeUpdate();
-        if(updatedRows == 0){
-            handleException(connection, failureMsg, null);
-        }
+            int updatedRows = ps.executeUpdate();
+            if(updatedRows == 0){
+                handleException(connection, failureMsg, null);
+            }
         commit(connection);
-        ps.close();
-        connection.close();
-        }catch(SQLException  e){handleException(connection, failureMsg, e);}
+        } catch(SQLException e){throw new DataAccessException(failureMsg, e);}
     }
 //Updates information about an products, such as its name, description, category, price
+        @Override
     public void updateProduct(Product product)throws DataAccessException{
         String failureMsg = "Could not update product " + product.name();
-        Connection connection = null;
-        try{   
-            connection = DBManager.getConnection();
-            String createProductStatement = 
-            "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
+        String createProductStatement = 
+        "UPDATE T_products SET name = ?, description = ?, category = ?, quantity = ?, price = ? WHERE product_id = ?";
+        try (
+            Connection connection = DBManager.getConnection();
             PreparedStatement ps = connection.prepareStatement(createProductStatement);
-
+        ) {
             ps.setString(1, product.name());
             ps.setString(2, product.description());
             ps.setString(3, product.category());
@@ -158,19 +148,19 @@ private Product mapProduct(ResultSet rs)throws SQLException {
             if(updatedRows != 1){
                 handleException(connection, failureMsg, null);
             }
-        commit(connection);
-        ps.close();
-        connection.close();
-        }catch(SQLException e){handleException(connection, failureMsg, e);}
+            commit(connection);            
+        }catch(SQLException | DataAccessException e){throw new DataAccessException(failureMsg, e);}
     }
 //updates the quantity of a given product
-    public void updateQuantity(int productID, int quantity)throws DataAccessException{
+        @Override
+    public void updateQuantity(int productID, int quantity) throws DataAccessException{
         String failureMsg = "Could not update " + productID + " to: " + quantity;
-        Connection connection = null;
-        try{
-            connection = DBManager.getConnection();
-            String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE product_id = ?";    
+        String updateQuantityStatement = "UPDATE T_products SET quantity = ? WHERE product_id = ?";  
+        try(
+            Connection connection = DBManager.getConnection();
+  
             PreparedStatement ps = connection.prepareStatement(updateQuantityStatement);
+            ){
             ps.setInt(1, quantity); 
             ps.setInt(2, productID);
 
@@ -178,10 +168,9 @@ private Product mapProduct(ResultSet rs)throws SQLException {
             if (updatedRows != 1) {
                 handleException(connection ,failureMsg, null);
             }
-        commit(connection);
-        ps.close();
-        connection.close();
-        } catch (SQLException  e) {handleException(connection ,failureMsg, e);
-        }
+            commit(connection);
+
+        } catch (SQLException e) {throw new DataAccessException(failureMsg,e);}
+        
     }
 }

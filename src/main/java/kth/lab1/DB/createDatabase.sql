@@ -97,22 +97,6 @@ CREATE TABLE T_order_product (
         REFERENCES T_products(product_id)
 );
 
-CREATE VIEW V_employee_orders AS
-SELECT
-    o.order_id,
-    o.customer_username,
-    p.name AS product_name,
-    oi.quantity,
-    oi.unit_price,
-    o.order_status,
-    o.total_price,
-    o.packed_by,
-    o.packed_at,
-    o.created_at
-FROM T_orders o
-JOIN T_order_product oi
-    ON o.order_id = oi.order_id
-JOIN T_products p
-    ON oi.product_id = p.product_id;
+CREATE VIEW V_employee_orders AS SELECT o.order_id, o.customer_username, p.name AS product_name, oi.quantity, oi.unit_price, o.order_status, o.total_price, o.packed_by, o.packed_at, o.created_at FROM T_orders o JOIN T_order_product oi ON o.order_id = oi.order_id JOIN T_products p ON oi.product_id = p.product_id;
 
   

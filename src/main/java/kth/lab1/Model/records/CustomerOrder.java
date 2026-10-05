@@ -1,11 +1,12 @@
 package kth.lab1.Model.records;
+import java.util.List;
+import java.time.LocalDateTime;
 //A row from the list the table that shows orders
 public record CustomerOrder(
-int order_id,
+String order_id,
 String customerUsername,
-String productName,
-int quantity,
-double unit_price,
-String orderStatus,
-Double totalPrice
+List<OrderProduct> items,
+Double totalPrice,
+LocalDateTime orderDate,
+String orderStatus
 ) {}

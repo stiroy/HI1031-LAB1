@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class CartController {
 
-    ModelFacade modelFacade = new ModelFacade();
+    ModelFacade Handler = new ModelFacade();
 
     private Cart getOrCreateCart(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
@@ -45,7 +45,7 @@ public class CartController {
                                 ? Integer.parseInt(quantityParam.trim()) 
                                 : 1;
 
-                ProductDTO selected = modelFacade.getProductByID(productId);
+                ProductDTO selected = Handler.getProductByID(productId);
 
                 if (selected != null) {
                     Cart cart = getOrCreateCart(request);
@@ -108,7 +108,7 @@ public class CartController {
             LocalDateTime.now(),
             "PENDING"
         );
-        modelFacade.placeOrder(order);
+        Handler.placeOrder(order);
         //TODO: SAVES IN SESSION ORDER CAUSE DB IS NOT WORKING
         HttpSession session = request.getSession(true);
         List<OrderDTO> orderHistory = (List<OrderDTO>) session.getAttribute("orderHistory");
