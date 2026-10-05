@@ -17,6 +17,12 @@ public class CartController {
 
     ModelFacade Handler = new ModelFacade();
 
+    /**
+     * Retrieves the existing shopping cart from the HTTP session or creates a new one if it does not exist.
+     * 
+     * @param request the HTTP servlet request used to access or create the session
+     * @return the active {@link Cart} instance stored in the session
+     */
     private Cart getOrCreateCart(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         Cart cart = (Cart) session.getAttribute("cart");
@@ -27,17 +33,31 @@ public class CartController {
         return cart;
     }
 
+    /**
+     * Prepares the shopping cart view by ensuring a cart session exists and populates request metadata.
+     * 
+     * @param request  the HTTP servlet request used to pass page title metadata
+     * @param response the HTTP servlet response
+     * @return the logical view name for the shopping cart page
+     */
     public String handleViewCart(HttpServletRequest request, HttpServletResponse response) {
         getOrCreateCart(request); // Ensure cart exists in session
         request.setAttribute("pageTitle", "Your Shopping Cart");
         return "cart";
     }
 
+    /**
+     * Adds a specified quantity of a product to the user's shopping cart and redirects back to the previous page or cart view.
+     * 
+     * @param request  the HTTP servlet request containing 'productId', optional 'quantity', and 'Referer' header
+     * @param response the HTTP servlet response
+     * @return a redirect path string pointing to the referring URL or the main cart endpoint
+     * @throws Exception if an error occurs while fetching product details from the handler
+     */
     public String handleAddToCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String productIdParam = request.getParameter("productId");
         String quantityParam = request.getParameter("quantity");
 
-        // TODO: database is currently broken solved temporarly
         if (productIdParam != null && !productIdParam.trim().isEmpty()) {
             try {
                 int productId = Integer.parseInt(productIdParam.trim());
@@ -65,6 +85,13 @@ public class CartController {
         return "redirect:/app/cart";
     }
 
+    /**
+     * Updates the item quantity for a specific product inside the active session shopping cart.
+     * 
+     * @param request  the HTTP servlet request containing 'productId' and updated 'quantity' parameters
+     * @param response the HTTP servlet response
+     * @return a redirect path string back to the shopping cart view
+     */
     public String handleUpdateCart(HttpServletRequest request, HttpServletResponse response) {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
@@ -77,6 +104,13 @@ public class CartController {
         return "redirect:/app/cart";
     }
 
+    /**
+     * Removes an item entirely from the active session shopping cart based on its product ID.
+     * 
+     * @param request  the HTTP servlet request containing the 'productId' parameter to remove
+     * @param response the HTTP servlet response
+     * @return a redirect path string back to the shopping cart view
+     */
     public String handleRemoveFromCart(HttpServletRequest request, HttpServletResponse response) {
         try {
             int productId = Integer.parseInt(request.getParameter("productId"));
@@ -87,6 +121,14 @@ public class CartController {
         return "redirect:/app/cart";
     }
 
+    /**
+     * Processes the checkout operation by creating an order snapshot, persisting it, clearing the session cart, and rendering confirmation.
+     * 
+     * @param request  the HTTP servlet request carrying user authentication details and target view attributes
+     * @param response the HTTP servlet response
+     * @return the logical view name for checkout success or a redirect URL if cart is empty or user is unauthenticated
+     * @throws Exception if an error occurs while persisting the order
+     */
     public String handleCheckout(HttpServletRequest request, HttpServletResponse response) throws Exception{
         Cart cart = getOrCreateCart(request);
     

@@ -13,6 +13,14 @@ public class AdminController {
 
     private final ModelFacade modelFacade = new ModelFacade();
 
+    /**
+     * Renders the administrative dashboard view and populates it with summary metrics.
+     * 
+     * @param request  the HTTP servlet request containing client request attributes
+     * @param response the HTTP servlet response
+     * @return the logical view name resolving to the admin home JSP page
+     * @throws Exception if an error occurs while fetching metrics from the model facade
+     */
     public String handleAdminHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("pageTitle", "Admin Control Center");
         
@@ -23,25 +31,35 @@ public class AdminController {
         return "admin/index"; // Resolves to /WEB-INF/admin/index.jsp
     }
 
-    // List all users
+    /**
+     * Fetches all registered users and sets the request attributes to display the user management page.
+     * 
+     * @param request  the HTTP servlet request used to pass user list and page title to the view
+     * @param response the HTTP servlet response
+     * @return the logical view name for the admin user management page
+     * @throws Exception if an error occurs while retrieving user data
+     */
     public String handleListUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("users", modelFacade.fetchUsers());
         request.setAttribute("pageTitle", "Admin - User Management");
         return "adminUsers";
     }
 
-    // Update user role
+    /**
+     * Updates an existing user's assigned role based on form submission parameters.
+     * 
+     * @param request  the HTTP servlet request containing 'userName' and 'role' parameters
+     * @param response the HTTP servlet response
+     * @return a redirect path string back to the user management view
+     * @throws Exception if an unhandled exception propagates
+     */
     public String handleUpdateUserRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
         String userNameParam = request.getParameter("userName");
         String newRole = request.getParameter("role");
 
         if (userNameParam != null && userNameParam.isBlank()) {
-            
-            // Construct DTO with target ID and updated role
             UserDTO userToUpdate = new UserDTO(0, userNameParam, null, newRole.trim());
-            
-            // Pass populated DTO to facade to update T_user_roles in PostgreSQL
             modelFacade.changeRole(userToUpdate);
         }
         } catch (Exception e) {
@@ -50,14 +68,27 @@ public class AdminController {
         return "redirect:/admin/adminUsers";
     }
 
-    // Render Admin Catalog Page
+    /**
+     * Retrieves all product catalog entries and prepares the administration catalog view.
+     * 
+     * @param request  the HTTP servlet request carrying catalog items and page metadata
+     * @param response the HTTP servlet response
+     * @return the logical view name for the admin catalog management page
+     * @throws Exception if an error occurs while retrieving catalog products
+     */
     public String handleManageCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("products", modelFacade.getProducts());
         request.setAttribute("pageTitle", "Admin - Catalog Management");
         return "adminCatalog";
     }
 
-    // Handle Add New Product
+    /**
+     * Parses incoming form parameters to create and persist a new product in the catalog.
+     * 
+     * @param request  the HTTP servlet request containing 'name', 'description', 'category', 'price', and 'stock'
+     * @param response the HTTP servlet response
+     * @return a redirect path string back to the catalog management view
+     */
     public String handleAddProduct(HttpServletRequest request, HttpServletResponse response) {
         try {
             String name = request.getParameter("name");
@@ -75,7 +106,13 @@ public class AdminController {
         return "redirect:/admin/adminCatalog";
     }
 
-    // Handle Edit Existing Product
+    /**
+     * Extracts form data to update properties of an existing product by its unique identifier.
+     * 
+     * @param request  the HTTP servlet request containing product attributes and 'id'
+     * @param response the HTTP servlet response
+     * @return a redirect path string back to the catalog management view
+     */
     public String handleUpdateProduct(HttpServletRequest request, HttpServletResponse response) {
         try {
             int id = Integer.parseInt(request.getParameter("id"));

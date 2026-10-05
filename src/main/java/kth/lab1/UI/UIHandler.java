@@ -20,6 +20,9 @@ import kth.lab1.UI.controller.EmployeeController;
 import kth.lab1.UI.controller.HomeController;
 import kth.lab1.UI.controller.SessionController;
 
+/**
+ * Front controller servlet that intercepts incoming web requests, dispatches them to registered action handlers, and manages view forwarding or redirection.
+ */
 @WebServlet(urlPatterns = {"/app/*", "/employee/*", "/admin/*"})
 public class UIHandler extends HttpServlet {
 
@@ -33,11 +36,18 @@ public class UIHandler extends HttpServlet {
         private final EmployeeController employeeController = new EmployeeController();
         private final AdminController adminController = new AdminController();
 
+        /**
+         * Servlet initialization callback that registers route keys and their corresponding controller action mappings.
+         * 
+         * @throws ServletException if an error occurs during servlet initialization
+         */
         @Override
         public void init() throws ServletException {
             attachActions();
         }
-
+        /**
+        * Binds application URI routes and action names to specific controller method references.
+        */
         private void attachActions() {
         // --- Product & Catalog Actions ---
         actionRegistry.put("status", statusController::handleStatus);
@@ -67,18 +77,42 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("checkout", cartController::handleCheckout);
     }
 
+    /**
+     * Handles HTTP GET requests by delegating to the unified request dispatcher.
+     * 
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws ServletException if a servlet processing error occurs
+     * @throws IOException      if an input or output error occurs during dispatching
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Handles HTTP POST requests by delegating to the unified request dispatcher.
+     * 
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws ServletException if a servlet processing error occurs
+     * @throws IOException      if an input or output error occurs during dispatching
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Central routing engine that parses path information, executes matching actions, and performs HTTP redirects or JSP forwards.
+     * 
+     * @param request  the incoming HTTP servlet request
+     * @param response the outgoing HTTP servlet response
+     * @throws ServletException if an error occurs while forwarding to the JSP view
+     * @throws IOException      if an input or output error occurs during redirection or rendering
+     */
     private void processRequest(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
             
@@ -121,11 +155,15 @@ public class UIHandler extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
+    
     /**
-     * Resolves subfolders dynamically based on view name prefix:
-     * - "admin/index"       -> /WEB-INF/admin/index.jsp
-     * - "employee/orders"  -> /WEB-INF/employee/orders.jsp
-     * - "catalog"           -> /WEB-INF/views/catalog.jsp
+     * Resolves subfolders dynamically based on view name prefix and forwards the request to the target JSP.
+     * 
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @param viewName the logical view target name or relative JSP file path
+     * @throws ServletException if the request dispatcher fails to forward
+     * @throws IOException      if an input or output error occurs
      */
     private void forwardToJsp(HttpServletRequest request, HttpServletResponse response, String viewName) 
             throws ServletException, IOException {

@@ -11,7 +11,12 @@ import jakarta.servlet.ServletException;
 public class SessionController {
 
     /**
-     * Destroys the user session and logs out.
+     * Logs out the authenticated user, invalidates the current HTTP session, and redirects to the home page.
+     * 
+     * @param req  the HTTP servlet request used to end the user session and retrieve the context path
+     * @param resp the HTTP servlet response used to send the HTTP redirect
+     * @return {@code null} as navigation is handled directly by sending an HTTP response redirect
+     * @throws IOException if an input or output error occurs during the redirection process
      */
     public String handleLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {

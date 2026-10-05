@@ -18,6 +18,13 @@ public class StatusController {
 
     private static final String JNDI_PATH = "java:comp/env/jdbc/postgres";
 
+    /**
+     * Diagnostic handler that tests JNDI DataSource lookup, measures database pool query latency, gathers session metadata, and populates status metrics.
+     * 
+     * @param req  the HTTP servlet request used to retrieve session details and expose the status attribute to the view
+     * @param resp the HTTP servlet response
+     * @return the logical view name resolving to the system status JSP page
+     */
     public String handleStatus(HttpServletRequest req, HttpServletResponse resp) {
         boolean jndiResolved = false;
         String jndiStatusMessage;

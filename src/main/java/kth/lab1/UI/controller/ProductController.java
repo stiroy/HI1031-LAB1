@@ -11,6 +11,15 @@ public class ProductController {
 
     private final ModelFacade Handler = new ModelFacade();
 
+    /**
+     * Parses the request for a product identifier, validates it, and forwards to the product detail view.
+     * 
+     * @param request  the HTTP servlet request containing the required 'id' parameter
+     * @param response the HTTP servlet response
+     * @return the logical view name resolving to the product detail page
+     * @throws IllegalArgumentException if the 'id' parameter is missing, blank, or not a valid integer
+     * @throws Exception                if an error occurs during processing
+     */
     public String handleDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String idParam = request.getParameter("id");
         
@@ -24,12 +33,20 @@ public class ProductController {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid Product ID format: " + idParam);
         }
-        //ProductDTO product = Handler.getProductByID(itemId);
-        //request.setAttribute("product", product);
+        ProductDTO product = Handler.getProductByID(itemId);
+        request.setAttribute("product", product);
 
        return "productDetail"; // Forwards to /WEB-INF/views/productDetail.jsp
     }
 
+    /**
+     * Executes a product search query against the database and sets the result list as a request attribute.
+     * 
+     * @param request  the HTTP servlet request containing the optional search query parameter 'q'
+     * @param response the HTTP servlet response
+     * @return the logical view name for the search results page
+     * @throws Exception if an error occurs while fetching product search results
+     */
     public String handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
             String query = request.getParameter("q");
             if (query == null || query.isBlank()) {
@@ -46,7 +63,14 @@ public class ProductController {
             return "searchResults";
     }
 
-
+    /**
+     * Displays the general product catalog or filtered search results depending on the presence of a search query.
+     * 
+     * @param request  the HTTP servlet request containing the optional 'query' parameter
+     * @param response the HTTP servlet response
+     * @return the logical view name for the catalog page
+     * @throws Exception if an error occurs while retrieving products from the database
+     */
     public String handleCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String searchQuery = request.getParameter("query");
             List<ProductDTO> products;
@@ -65,7 +89,12 @@ public class ProductController {
             
             return "catalog";
     }
-    // dummy data for testing
+
+    /**
+     * Generates a collection of mock product items for unit testing and UI debugging purposes.
+     * 
+     * @return a {@link List} of sample {@link ProductDTO} instances
+     */
     public List<ProductDTO> getSampleProducts() {
         List<ProductDTO> list = new ArrayList<>();
         list.add(new ProductDTO(1, "Mechanical Keyboard", "RGB backlighting with linear switches", "Electronics", 129.99, 15));
