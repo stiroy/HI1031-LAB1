@@ -9,9 +9,9 @@ public class HomeController {
     public String handleHome(HttpServletRequest request, HttpServletResponse response) {
         // Retrieve current logged-in user if session exists
         if (request.isUserInRole("ADMIN")) {
-            return "/admin/index.jsp";
+            return "redirect:/admin/index.jsp";
         } else if (request.isUserInRole("EMPLOYEE")) {
-            return "/employee/employeeOrders.jsp";
+            return "redirect:/employee/employeeOrders.jsp";
         } else {
             // Defaults to CUSTOMER or unauthenticated guest view
             return "index";
