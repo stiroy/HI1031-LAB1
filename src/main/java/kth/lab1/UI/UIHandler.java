@@ -46,14 +46,14 @@ public class UIHandler extends HttpServlet {
         actionRegistry.put("userProfile", userController::handleProfile);
         actionRegistry.put("orders", userController::handleOrderHistory);
         // --- Admin Routes ---
-        actionRegistry.put("adminUsers", adminController::handleListUsers);
-        actionRegistry.put("updateUserRole", adminController::handleUpdateUserRole);
-        actionRegistry.put("adminCatalog", adminController::handleManageCatalog);
-        actionRegistry.put("addProduct", adminController::handleAddProduct);
-        actionRegistry.put("updateProduct", adminController::handleUpdateProduct);
+        actionRegistry.put("/admin/adminUsers", adminController::handleListUsers);
+        actionRegistry.put("/admin/updateUserRole", adminController::handleUpdateUserRole);
+        actionRegistry.put("/admin/adminCatalog", adminController::handleManageCatalog);
+        actionRegistry.put("/admin/addProduct", adminController::handleAddProduct);
+        actionRegistry.put("/admin/updateProduct", adminController::handleUpdateProduct);
         // Employee
-        actionRegistry.put("employeeOrders", employeeController::handleViewOrders);
-        actionRegistry.put("packOrder", employeeController::handlePackOrder);
+        actionRegistry.put("/employee/employeeOrders", employeeController::handleViewOrders);
+        actionRegistry.put("/employee/packOrder", employeeController::handlePackOrder);
         // catalog fuctions
         actionRegistry.put("itemDetail", productController::handleDetail);
         actionRegistry.put("catalog", productController::handleCatalog);
