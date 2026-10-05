@@ -5,8 +5,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kth.lab1.UI.DTO.Cart;
 import kth.lab1.UI.DTO.ProductDTO;
+import kth.lab1.UI.DTO.OrderDTO;
 
+import java.util.UUID;// maybe temorary
 import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class CartController {
 
@@ -84,5 +88,33 @@ public class CartController {
         } catch (NumberFormatException ignored) {}
 
         return "redirect:/app/cart";
+    }
+
+    public String handleCheckout(HttpServletRequest request, HttpServletResponse response) {
+        Cart cart = getOrCreateCart(request);
+    
+        // If cart is empty, redirect back to index
+        if (cart.getItems().isEmpty()) {
+            return "redirect:/app/index";
+        }
+    
+        String customerName = request.getRemoteUser();
+        if (customerName == null || customerName.isEmpty()) {
+            customerName = "Guest User";
+        }
+    
+        OrderDTO order = new OrderDTO(
+            "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(),
+            customerName,
+            new ArrayList<>(cart.getItems()), // snapshot copy
+            cart.getTotalAmount(),
+            LocalDateTime.now()
+        );
+    
+        request.setAttribute("completedOrder", order);
+        request.setAttribute("pageTitle", "Order Confirmation");
+    
+        cart.clear();
+        return "checkoutSuccess";
     }
 }

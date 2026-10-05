@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <a href="${pageContext.request.contextPath}/app/userProfile" 
+                <a href="${pageContext.request.contextPath}/app/checkout" 
                    class="block text-center w-full py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-lg transition shadow-sm">
                     Proceed to Checkout
                 </a>
