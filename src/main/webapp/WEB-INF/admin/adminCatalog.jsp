@@ -21,7 +21,7 @@
                 <span class="bg-purple-100 text-purple-700 w-6 h-6 rounded-full inline-flex items-center justify-center text-xs mr-2">+</span>
                 Add New Product
             </h2>
-            <form action="${pageContext.request.contextPath}/app/addProduct" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <form action="${pageContext.request.contextPath}/admin/addProduct" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Product Name</label>
                     <input type="text" name="name" required placeholder="e.g. Mechanical Keyboard" class="w-full border border-slate-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500" />
@@ -71,7 +71,7 @@
                 <tbody class="divide-y divide-slate-100">
                     <t:forEach items="${products}" var="p">
                         <tr class="hover:bg-slate-50 transition">
-                            <form action="${pageContext.request.contextPath}/app/updateProduct" method="POST" class="m-0">
+                            <form action="${pageContext.request.contextPath}/admin/updateProduct" method="POST" class="m-0">
                                 <input type="hidden" name="id" value="${p.id}" />
                                 
                                 <td class="p-3.5 font-mono text-slate-400">#${p.id}</td>

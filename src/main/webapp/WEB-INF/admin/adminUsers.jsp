@@ -39,7 +39,7 @@
                                 </span>
                             </td>
                             <td class="p-3.5 text-right">
-                                <form action="${pageContext.request.contextPath}/app/updateUserRole" method="POST" class="inline-flex items-center space-x-2 m-0">
+                                <form action="${pageContext.request.contextPath}/admin/updateUserRole" method="POST" class="inline-flex items-center space-x-2 m-0">
                                     <input type="hidden" name="userId" value="${u.id}" />
                                     <select name="role" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1 bg-white font-medium focus:ring-2 focus:ring-purple-500 outline-none">
                                         <option value="CUSTOMER" ${u.role == 'CUSTOMER' ? 'selected' : ''}>CUSTOMER</option>
