@@ -1,14 +1,24 @@
-INSERT INTO T_products (
-    name,
-    description,
-    category,
-    quantity,
-    price
-)
+INSERT INTO T_categories (category_name) 
+VALUES 
+    ('Drink'),
+    ('Cutlery'),
+    ('Electronics'),
+    ('Office'),
+    ('Home')
+ON CONFLICT (category_name) DO NOTHING;
+
+INSERT INTO T_products (name, description, category, quantity, price)
 VALUES
-('Laptop', 'fett bra', 'Computers', 14, 299.99),
-('Glass of water', 'mmm water', 'Neccesities', 100, 100),
-('Spoon', 'A silver spoon', 'Cutlerry', 50, 9.99);
+    ('Laptop', 'fett bra', 'Electronics', 14, 299.99),
+    ('Glass of water', 'mmm water', 'Drink', 100, 100.00),
+    ('Spoon', 'A silver spoon', 'Cutlery', 50, 9.99),
+    ('Ergonomic Chair', 'Adjustable mesh office chair with lumbar support', 'Office', 12, 189.50),
+    ('Mechanical Keyboard', 'RGB backlit mechanical keyboard with blue switches', 'Electronics', 25, 79.99),
+    ('Fork', 'Stainless steel dinner fork', 'Cutlery', 150, 4.50),
+    ('Butter Knife', 'Blunt knife designed for butter and spreads', 'Cutlery', 80, 5.25),
+    ('Sparkling Water', 'Refreshing carbonated mineral water 500ml', 'Drink', 200, 2.50),
+    ('Coffee Mug', 'Ceramic 350ml mug, dishwasher safe', 'Home', 45, 12.00),
+    ('Wireless Mouse', '2.4GHz optical wireless mouse with USB receiver', 'Electronics', 35, 24.99);
 
 INSERT INTO T_users(username, password_hash)
 VALUES ('exampleUser', 'hashed_password');
