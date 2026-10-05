@@ -14,7 +14,7 @@ public class HomeController {
             return "redirect:/Employee/index";
         } else {
             // Defaults to CUSTOMER or unauthenticated guest view
-            return "redirect:/app/index";
+            return "index";
         }
 
     }
