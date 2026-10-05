@@ -38,7 +38,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Protected Customer Area</web-resource-name>
-            <url-pattern>/app/profile</url-pattern>
+            <url-pattern>/app/checkout</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>CUSTOMER</role-name>
@@ -50,7 +50,6 @@
         <web-resource-collection>
             <web-resource-name>Protected user Area</web-resource-name>
             <url-pattern>/app/userProfile</url-pattern>
-            <url-pattern>/app/checkout</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMIN</role-name>
