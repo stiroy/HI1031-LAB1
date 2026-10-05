@@ -6,75 +6,46 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kth.lab1.UI.DTO.UserDTO;
+import kth.lab1.Model.ModelFacade;
 import kth.lab1.UI.DTO.ProductDTO;
 
 public class AdminController {
 
+    private final ModelFacade modelFacade = new ModelFacade();
 
-    private List<UserDTO> getUsers(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
-        List<UserDTO> users = (List<UserDTO>) session.getAttribute("mockUsers");
-        
-        // dummy data
-        if (users == null) {
-            users = new ArrayList<>();
-            users.add(new UserDTO(1, "john_doe", "john@example.com", "CUSTOMER"));
-            users.add(new UserDTO(2, "admin_user", "admin@store.se", "ADMIN"));
-            users.add(new UserDTO(3, "warehouse_worker", "warehouse@store.se", "WAREHOUSE"));
-            session.setAttribute("mockUsers", users);
-        }
-        return users;
-    }
-
-    public String handleAdminHome(HttpServletRequest request, HttpServletResponse response) {
+    public String handleAdminHome(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("pageTitle", "Admin Control Center");
         
-        // Pass metrics to WEB-INF/admin/index.jsp
+        // Pass high-level metrics if supported by facade
+        request.setAttribute("totalProducts", modelFacade.getProducts().size());
+        request.setAttribute("totalUsers", modelFacade.fetchUsers().size());
 
         return "admin/index"; // Resolves to /WEB-INF/admin/index.jsp
     }
 
     // List all users
-    public String handleListUsers(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("users", getUsers(request));
+    public String handleListUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute("users", modelFacade.fetchUsers());
         request.setAttribute("pageTitle", "Admin - User Management");
         return "adminUsers";
     }
 
     // Update user role
-    public String handleUpdateUserRole(HttpServletRequest request, HttpServletResponse response) {
+    public String handleUpdateUserRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
             String newRole = request.getParameter("role");
 
-            List<UserDTO> users = getUsers(request);
-            for (UserDTO u : users) {
-                if (u.getId() == userId) {
-                    u.setRole(newRole);
-                    break;
-                }
-            }
+            //TODO
+            modelFacade.changeRole(null);
         } catch (Exception ignored) {}
 
         return "redirect:/admin/adminUsers";
     }
 
-    // Helper to get or initialize shared sample products in ServletContext
-    private List<ProductDTO> getCatalog(HttpServletRequest request) {
-        List<ProductDTO> products = (List<ProductDTO>) request.getServletContext().getAttribute("globalProducts");
-        if (products == null) {
-            products = new ArrayList<>();
-            products.add(new ProductDTO(1, "Mechanical Keyboard", "RGB tactile switch keyboard", "Electronics", 99.99, 15));
-            products.add(new ProductDTO(2, "Wireless Mouse", "Ergonomic 2.4GHz optical mouse", "Electronics", 29.99, 30));
-            products.add(new ProductDTO(3, "Coffee Mug", "Ceramic 350ml desk mug", "Home", 12.50, 50));
-            request.getServletContext().setAttribute("globalProducts", products);
-        }
-        return products;
-    }
-
     // Render Admin Catalog Page
-    public String handleManageCatalog(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("products", getCatalog(request));
+    public String handleManageCatalog(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute("products", modelFacade.getProducts());
         request.setAttribute("pageTitle", "Admin - Catalog Management");
         return "adminCatalog";
     }
@@ -88,10 +59,8 @@ public class AdminController {
             double price = Double.parseDouble(request.getParameter("price"));
             int stock = Integer.parseInt(request.getParameter("stock"));
 
-            List<ProductDTO> products = getCatalog(request);
-            int newId = products.stream().mapToInt(ProductDTO::getId).max().orElse(0) + 1;
-
-            products.add(new ProductDTO(newId, name, description, category, price, stock));
+            ProductDTO newProduct = new ProductDTO(0, name, description, category, price, stock);
+            modelFacade.addProduct(newProduct);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,17 +78,9 @@ public class AdminController {
             double price = Double.parseDouble(request.getParameter("price"));
             int stock = Integer.parseInt(request.getParameter("stock"));
 
-            List<ProductDTO> products = getCatalog(request);
-            for (ProductDTO p : products) {
-                if (p.getId() == id) {
-                    p.setName(name);
-                    p.setDescription(description);
-                    p.setCategory(category);
-                    p.setPrice(price);
-                    p.setQuantity(stock);
-                    break;
-                }
-            }
+            ProductDTO updatedProduct = new ProductDTO(id, name, description, category, price, stock);
+            modelFacade.updateProduct(updatedProduct);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

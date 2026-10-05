@@ -10,7 +10,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
             <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Catalog Management</p>
-            <h3 class="text-2xl font-bold text-teal-400 mt-2">${products.size()} Products</h3>
+            <h3 class="text-2xl font-bold text-teal-400 mt-2">${totalProducts != null ? totalProducts : 0} Products</h3>
             <p class="text-xs text-slate-500 mt-1">Active inventory & pricing control</p>
         </div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
