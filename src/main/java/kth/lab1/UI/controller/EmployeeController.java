@@ -12,13 +12,13 @@ public class EmployeeController {
 
     private final ModelFacade modelFacade = new ModelFacade();
 
-    public String handleViewOrders(HttpServletRequest request, HttpServletResponse response) {
+    public String handleViewOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("orders", modelFacade.viewAllCustomerOrders());
         request.setAttribute("pageTitle", "Warehouse - Pack Orders");
         return "employeeOrders";
     }
 
-    public String handlePackOrder(HttpServletRequest request, HttpServletResponse response) {
+    public String handlePackOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String orderIdParam = request.getParameter("orderId");
         String employee = request.getRemoteUser();
 
@@ -33,7 +33,7 @@ public class EmployeeController {
             }
         }
 
-        if (orderId != null && !orderId.trim().isEmpty()) {
+        //if (orderId != null && !orderId.trim().isEmpty()) {
             // 1. Update status in Global Warehouse Queue
             /*@SuppressWarnings("unchecked")
             List<OrderDTO> globalOrders = (List<OrderDTO>) request.getServletContext().getAttribute("globalOrders");
@@ -68,7 +68,7 @@ public class EmployeeController {
                     }
                 }
             }*/
-        }
+        //}
 
         return "redirect:/app/employeeOrders";
     }
