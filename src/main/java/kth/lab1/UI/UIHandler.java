@@ -81,14 +81,20 @@ public class UIHandler extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
             
-        String pathInfo = request.getPathInfo();
+        String servletPath = request.getServletPath(); // e.g., "/admin" or "/app"
+        String pathInfo = request.getPathInfo();       // e.g., "/index" or "/adminCatalog"
+
+        // Full route determination: e.g., "/admin/index" or "index"
+        String fullPath = servletPath + (pathInfo != null ? pathInfo : "");
         String actionName = (pathInfo != null && pathInfo.length() > 1) 
                             ? pathInfo.substring(1) 
                             : "index";
 
-        ViewAction action = actionRegistry.get(actionName);
+        ViewAction action = actionRegistry.get(fullPath);
+        if (action == null) {
+            action = actionRegistry.get(actionName);
+        }
 
-        // If route doesn't exist in registry, fall back to resolve JSP dynamically
         if (action == null) {
             forwardToJsp(request, response, actionName);
             return;
@@ -106,7 +112,6 @@ public class UIHandler extends HttpServlet {
                 return;
             }
 
-            // Forward to resolved view JSP
             forwardToJsp(request, response, viewName);
 
         } catch (Exception e) {
@@ -124,9 +129,20 @@ public class UIHandler extends HttpServlet {
     private void forwardToJsp(HttpServletRequest request, HttpServletResponse response, String viewName) 
             throws ServletException, IOException {
 
+        if (viewName.endsWith(".jsp")) {
+            //string jsp to avoid direct calls
+            viewName = viewName.substring(0, viewName.length() - 4);
+        }
+
+        String servletPath = request.getServletPath();
         String jspPath;
-        if (viewName.startsWith("admin/") || viewName.startsWith("employee/")) {
-            jspPath = "/WEB-INF/" + viewName + ".jsp";
+
+        if (viewName.startsWith("admin/") || "/admin".equals(servletPath)) {
+            String relativeView = viewName.startsWith("admin/") ? viewName.substring(6) : viewName;
+            jspPath = "/WEB-INF/admin/" + relativeView + ".jsp";
+        } else if (viewName.startsWith("employee/") || "/employee".equals(servletPath)) {
+            String relativeView = viewName.startsWith("employee/") ? viewName.substring(9) : viewName;
+            jspPath = "/WEB-INF/employee/" + relativeView + ".jsp";
         } else {
             jspPath = "/WEB-INF/views/" + viewName + ".jsp";
         }
